@@ -1,0 +1,4 @@
+# .gitignore automatically created on 2019-09-27 17:21
+# adding untracked files on 2019-09-27 17:21
+nrs_lib/__pycache__/
+tests/__pycache__/

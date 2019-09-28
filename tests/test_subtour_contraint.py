@@ -1,7 +1,8 @@
 #! /usr/bin/python3
 
+# Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
+
 import unittest
-from random import shuffle
 from nrs_lib.subtour_constraint import *
 
 

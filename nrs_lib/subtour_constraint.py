@@ -19,7 +19,6 @@ def find_subtour(arches):
         arches.remove(i)
 
     return out
-    
 
 
 def build_tours(arches):

@@ -1,11 +1,8 @@
 #! /usr/bin/python
 
 
-
 def _zeros(size):
-    out = [
-            [0 for _ in range(size)] for _ in range(size)
-        ]
+    out = [[0 for _ in range(size)] for _ in range(size)]
     return out
 
 
@@ -17,6 +14,7 @@ def _enforce_self_dist(dist_matrix, scale):
 
     return dist_matrix
 
+
 def build_distance(hub_distance, patient_distance, scale):
     out = _zeros(len(patient_distance) + 1)
 
@@ -27,6 +25,5 @@ def build_distance(hub_distance, patient_distance, scale):
     for i, row in enumerate(patient_distance, 1):
         for j, d in enumerate(row, 1):
             out[i][j] = d
-
 
     return _enforce_self_dist(out, scale)

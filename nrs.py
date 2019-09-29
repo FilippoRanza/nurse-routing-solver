@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 import json
 
+from nrs_lib import run_solver
 
 def parse_args():
     parser = ArgumentParser()
@@ -21,7 +22,8 @@ def load_instance(file_name):
 def main():
     args = parse_args()
     instance = load_instance(args.instance)
-    print(instance)
+    result = run_solver(instance)
+    print(result)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@
 
 from gurobipy import *
 from .build_distance import build_distance
-
+from .subtour_constraint import build_tours
 
 def arange(size):
     return list(range(size))
@@ -48,7 +48,7 @@ def define_model(name, patient_count, nurse_count, hub_distance, patient_distanc
             == 1
         )
 
-    distances = build_distance(hub_distance, patient_count)
+    distances = build_distance(hub_distance, patient_distance, 1000)
 
     arch_weight = {
         (k, f, t): d
@@ -65,3 +65,17 @@ def define_model(name, patient_count, nurse_count, hub_distance, patient_distanc
     setattr(model, "_patient_count", len(nodes))
 
     return model, transit_vars
+
+
+def subtour_elimination(model, where):
+    if where == GRB.Callback.MIPSOL:
+        vals = model.cbGetSolution(model._transit)
+        for k in model._nurses:
+            selected = tuplelist((i, j) for _, i, j in model._transit.keys().select(k, '*', '*')
+                                 if vals[k,i,j] > 0.5)
+            # find the shortest cycle in the selected edge list
+            for tour in build_tours(selected):
+    
+                i, j = tour[0]
+                if i != 0:
+                    model.cbLazy(quicksum(model._transit[k, i, j] for i, j in tour) <= len(tour) - 1)

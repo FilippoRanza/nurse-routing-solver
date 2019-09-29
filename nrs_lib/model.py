@@ -107,10 +107,7 @@ def subtour_elimination(model, where):
             )
             # find the shortest cycle in the selected edge list
             for tour in find_tours(selected):
-
-                i, j = tour[0]
-                if i != 0:
-                    model.cbLazy(
-                        quicksum(model._transit[k, i, j] for i, j in tour)
-                        <= len(tour) - 1
-                    )
+                model.cbLazy(
+                    quicksum(model._transit[k, i, j] for i, j in tour)
+                    <= len(tour) - 1
+                )

@@ -32,7 +32,3 @@ def find_tours(arches):
         if check_subtour(tmp):
             out.append(tmp)
     return out
-
-
-def find_shortest_subtour(arches):
-    pass

@@ -15,7 +15,7 @@ class TestSubtourBuiler(unittest.TestCase):
 
     def test_build_tours(self):
         nodes = [(0, 1), (1, 0), (3, 4), (4, 5), (5, 3)]
-        tours = build_tours(nodes)
+        tours = find_tours(nodes)
         self.assertEqual(len(tours), 2)
         self.assertIn([(0, 1), (1, 0)], tours)
         self.assertIn([(3, 4), (4, 5), (5, 3)], tours)

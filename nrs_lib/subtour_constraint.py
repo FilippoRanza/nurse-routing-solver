@@ -21,7 +21,7 @@ def find_subtour(arches):
     return out
 
 
-def build_tours(arches):
+def find_tours(arches):
     out = []
     while arches:
         out.append(find_subtour(arches))

@@ -8,7 +8,7 @@ try:
 except ImportError:
     print("this error is silenced for testing purpose")
 from .build_distance import build_distance
-from .subtour_constraint import build_tours
+from .subtour_constraint import find_tours
 
 
 def arange(size):
@@ -106,7 +106,7 @@ def subtour_elimination(model, where):
                 if vals[k, i, j] > 0.5
             )
             # find the shortest cycle in the selected edge list
-            for tour in build_tours(selected):
+            for tour in find_tours(selected):
 
                 i, j = tour[0]
                 if i != 0:

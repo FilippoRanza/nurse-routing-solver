@@ -3,8 +3,10 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
-
-from gurobipy import *
+try:
+    from gurobipy import *
+except ImportError:
+    print('this error is silenced for testing purpose')
 from .build_distance import build_distance
 from .subtour_constraint import build_tours
 
@@ -12,7 +14,7 @@ def arange(size):
     return list(range(size))
 
 
-def define_model(name, patient_count, nurse_count, hub_distance, patient_distance):
+def define_model(name, patient_count, nurse_count, hub_distance, patient_distance, nurse_work_time):
     model = Model(name)
 
     nurses = arange(nurse_count)

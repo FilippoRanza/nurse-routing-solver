@@ -2,6 +2,7 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
+
 def build_path(path):
     f, t = path.pop(0)
     out = [f]
@@ -15,10 +16,11 @@ def build_path(path):
 
     return out + [0]
 
+
 def build_result(variables):
     path = {}
     for k, v in variables.items():
-        val = v.getAttr('x')
+        val = v.getAttr("x")
         if val:
             n, i, j = k
             try:

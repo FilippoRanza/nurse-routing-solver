@@ -5,6 +5,7 @@
 from .model import define_model, subtour_elimination
 from .build_result import build_result
 
+
 def run_solver(config):
 
     model, transit = define_model(
@@ -13,6 +14,7 @@ def run_solver(config):
         config["NURSES"],
         config["HUB_DISTANCE"],
         config["PATIENTS_DISTANCE"],
+        config["NURSES_WORK_TIME"],
     )
     model.Params.lazyConstraints = 1
     model.optimize(subtour_elimination)

@@ -4,3 +4,5 @@ nrs_lib/__pycache__/
 tests/__pycache__/
 # adding untracked files on 2019-09-29 17:12
 gurobi.log
+# adding untracked files on 2019-09-29 19:00
+.vscode/

@@ -26,9 +26,7 @@ def check_subtour(tour):
     return i != 0
 
 def find_tours(arches):
-    out = []
     while arches:
         tmp = find_subtour(arches)
         if check_subtour(tmp):
-            out.append(tmp)
-    return out
+            yield tmp

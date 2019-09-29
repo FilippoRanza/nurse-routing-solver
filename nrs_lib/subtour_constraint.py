@@ -20,9 +20,19 @@ def find_subtour(arches):
 
     return out
 
+def check_subtour(tour):
+    head = tour[0]
+    i, _ = head
+    return i != 0
 
 def find_tours(arches):
     out = []
     while arches:
-        out.append(find_subtour(arches))
+        tmp = find_subtour(arches)
+        if check_subtour(tmp):
+            out.append(tmp)
     return out
+
+
+def find_shortest_subtour(arches):
+    pass

@@ -3,7 +3,7 @@
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
 import unittest
-from nrs_lib.subtour_constraint import *
+from nrs_lib.subtour_constraint import find_tours, find_subtour
 
 
 class TestSubtourBuiler(unittest.TestCase):
@@ -16,8 +16,7 @@ class TestSubtourBuiler(unittest.TestCase):
     def test_build_tours(self):
         nodes = [(0, 1), (1, 0), (3, 4), (4, 5), (5, 3)]
         tours = find_tours(nodes)
-        self.assertEqual(len(tours), 2)
-        self.assertIn([(0, 1), (1, 0)], tours)
+        self.assertEqual(len(tours), 1)
         self.assertIn([(3, 4), (4, 5), (5, 3)], tours)
 
 

@@ -14,61 +14,69 @@ def arange(size):
     return list(range(size))
 
 
-def define_model(name, patient_count, nurse_count, hub_distance, patient_distance, nurse_work_time):
-    model = Model(name)
+class ModelConfigutator:
+    def __init__(self, name):
+        self.model = Model(name)
 
-    nurses = arange(nurse_count)
-    nodes = arange(patient_count)
+    def set_variables(self, nurse_count, patient_count):
+        self.nurses = arange(nurse_count)
+        self.nodes = arange(patient_count)
 
-    transit_keys = ((n, i, j) for n in nurses for i in nodes for j in nodes)
-    transit_vars = model.addVars(transit_keys, name="transit", vtype=GRB.BINARY)
+        transit_keys = ((n, i, j) for n in self.nurses for i in self.nodes for j in self.nodes)
+        self.transit_vars = self.model.addVars(transit_keys, name="transit", vtype=GRB.BINARY)
 
-    service_key = ((i, n) for i in nodes[1:] for n in nurses)
-    service_vars = model.addVars(service_key, name="service", vtype=GRB.BINARY)
+        service_key = ((i, n) for i in self.nodes[1:] for n in self.nurses)
+        self.service_vars = self.model.addVars(service_key, name="service", vtype=GRB.BINARY)
 
-    patient_vars = model.addVars(nodes[1:], name="patient", vtype=GRB.BINARY)
+        self.patient_vars = self.model.addVars(self.nodes[1:], name="patient", vtype=GRB.BINARY)
 
-    for i in nodes[1:]:
-        model.addConstr(service_vars.sum(i, "*") == (1 - patient_vars[i]))
+        self._apply_contrains_()
 
-    for i in nodes[1:]:
-        for n in nurses:
-            model.addConstr(transit_vars.sum(n, i, "*") == service_vars.sum(i, n))
-            model.addConstr(transit_vars.sum(n, "*", i) == service_vars.sum(i, n))
+    def _apply_contrains_(self):
+        for i in self.nodes[1:]:
+            self.model.addConstr(self.service_vars.sum(i, "*") == (1 - self.patient_vars[i]))
 
-    for k in nurses:
-        model.addConstr(
-            quicksum(
-                service_vars.sum(i, k) * transit_vars.sum(k, 0, i) for i in nodes[1:]
+        for i in self.nodes[1:]:
+            for n in self.nurses:
+                self.model.addConstr(self.transit_vars.sum(n, i, "*") == self.service_vars.sum(i, n))
+                self.model.addConstr(self.transit_vars.sum(n, "*", i) == self.service_vars.sum(i, n))
+
+        for k in self.nurses:
+            self.model.addConstr(
+                quicksum(
+                    self.service_vars.sum(i, k) * self.transit_vars.sum(k, 0, i) for i in self.nodes[1:]
+                )
+                == 1
             )
-            == 1
-        )
-        model.addConstr(
-            quicksum(
-                service_vars.sum(i, k) * transit_vars.sum(k, i, 0) for i in nodes[1:]
+            self.model.addConstr(
+                quicksum(
+                    self.service_vars.sum(i, k) * self.transit_vars.sum(k, i, 0) for i in self.nodes[1:]
+                )
+                == 1
             )
-            == 1
-        )
 
-    distances = build_distance(hub_distance, patient_distance, 1000)
+    def set_objective(self, hub_distances, patient_distances, external_price):
+        distances = build_distance(hub_distances, patient_distances, 1000)
 
-    arch_weight = {
-        (k, f, t): d
-        for f, dist in enumerate(distances)
-        for t, d in enumerate(dist)
-        for k in nurses
-    }
+        arch_weight = {
+            (k, f, t): d
+            for f, dist in enumerate(distances)
+            for t, d in enumerate(dist)
+            for k in self.nurses
+        }
 
-    beta = 10000
-    model.setObjective(transit_vars.prod(arch_weight) + (beta * patient_vars.sum()))
+        self.model.setObjective(self.transit_vars.prod(arch_weight) + (external_price * self.patient_vars.sum()))
+    
 
-    setattr(model, "_transit", transit_vars)
-    setattr(model, "_nurses", nurses)
-    setattr(model, "_patient_count", len(nodes))
+    def get_model(self):
+        setattr(self.model, "_transit", self.transit_vars)
+        setattr(self.model, "_nurses", self.nurses)
+        setattr(self.model, "_patient_count", len(self.nodes))        
+        self.model.Params.lazyConstraints = 1
 
-    return model, transit_vars
+        return self.model, self.transit_vars
 
-
+    
 def subtour_elimination(model, where):
     if where == GRB.Callback.MIPSOL:
         vals = model.cbGetSolution(model._transit)

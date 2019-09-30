@@ -9,7 +9,8 @@ from .build_result import build_result
 def days_count(config):
     head = config['PATIENTS'][0]
     req = head['REQUEST']
-    return len(req)
+    #return len(req)
+    return 1
 
 
 def run_solver(config):

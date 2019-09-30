@@ -19,12 +19,13 @@ class ModelConfigurator:
     def __init__(self, name):
         self.model = Model(name)
 
-    def set_variables(self, nurse_count, patient_count):
+    def set_variables(self, nurse_count, patient_count, days):
         self.nurses = arange(nurse_count)
         self.nodes = arange(patient_count)
+        self.days = arange(days)
 
         transit_keys = (
-            (n, i, j) for n in self.nurses for i in self.nodes for j in self.nodes
+            (d, n, i, j) for n in self.nurses for i in self.nodes for j in self.nodes for d in self.days
         )
         self.transit_vars = self.model.addVars(
             transit_keys, name="transit", vtype=GRB.BINARY
@@ -49,37 +50,47 @@ class ModelConfigurator:
 
         for i in self.nodes[1:]:
             for n in self.nurses:
-                self.model.addConstr(
-                    self.transit_vars.sum(n, i, "*") == self.service_vars.sum(i, n)
-                )
-                self.model.addConstr(
-                    self.transit_vars.sum(n, "*", i) == self.service_vars.sum(i, n)
-                )
+                for d in self.days:
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, i, "*") == self.service_vars.sum(i, n)
+                    )
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, "*", i) == self.service_vars.sum(i, n)
+                    )
 
-        for k in self.nurses:
-            self.model.addConstr(
-                quicksum(
-                    self.service_vars.sum(i, k) * self.transit_vars.sum(k, 0, i)
-                    for i in self.nodes[1:]
+
+        #for d in self.days:
+        #    for k in self.nurses:
+        #        for i in self.nodes:
+        #            self.model.addConstr(self.transit_vars.select(d, k, i, i) == 0)
+
+
+        for d in self.days:
+            for k in self.nurses:
+                self.model.addConstr(
+                    quicksum(
+                        self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, 0, i)
+                        for i in self.nodes[1:]
+                    )
+                    == 1
                 )
-                == 1
-            )
-            self.model.addConstr(
-                quicksum(
-                    self.service_vars.sum(i, k) * self.transit_vars.sum(k, i, 0)
-                    for i in self.nodes[1:]
+                self.model.addConstr(
+                    quicksum(
+                        self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, i, 0)
+                        for i in self.nodes[1:]
+                    )
+                    == 1
                 )
-                == 1
-            )
 
     def set_objective(self, hub_distances, patient_distances, external_price):
         distances = build_distance(hub_distances, patient_distances, 1000)
 
         arch_weight = {
-            (k, f, t): d
+            (d, k, f, t): d
             for f, dist in enumerate(distances)
             for t, d in enumerate(dist)
             for k in self.nurses
+            for d in self.days
         }
 
         self.model.setObjective(
@@ -91,6 +102,7 @@ class ModelConfigurator:
         setattr(self.model, "_transit", self.transit_vars)
         setattr(self.model, "_nurses", self.nurses)
         setattr(self.model, "_patient_count", len(self.nodes))
+        setattr(self.model, "_days", self.days)
         self.model.Params.lazyConstraints = 1
 
         return self.model, self.transit_vars
@@ -99,15 +111,16 @@ class ModelConfigurator:
 def subtour_elimination(model, where):
     if where == GRB.Callback.MIPSOL:
         vals = model.cbGetSolution(model._transit)
-        for k in model._nurses:
-            selected = tuplelist(
-                (i, j)
-                for _, i, j in model._transit.keys().select(k, "*", "*")
-                if vals[k, i, j] > 0.5
-            )
-            # find the shortest cycle in the selected edge list
-            for tour in find_tours(selected):
-                model.cbLazy(
-                    quicksum(model._transit[k, i, j] for i, j in tour)
-                    <= len(tour) - 1
+        for d in model._days:
+            for k in model._nurses:
+                selected = tuplelist(
+                    (i, j)
+                    for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
+                    if vals[d, k, i, j] > 0.5
                 )
+                # find the shortest cycle in the selected edge list
+                for tour in find_tours(selected):
+                    model.cbLazy(
+                        quicksum(model._transit[d, k, i, j] for i, j in tour)
+                        <= len(tour) - 1
+                    )

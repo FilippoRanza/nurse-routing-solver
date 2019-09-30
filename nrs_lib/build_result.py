@@ -18,16 +18,21 @@ def build_path(path):
 
 
 def build_result(variables):
-    path = {}
+    days = {}
+    
     for k, v in variables.items():
         val = v.getAttr("x")
         if val:
-            n, i, j = k
+            d, n, i, j = k
             try:
-                path[n].append((i, j))
+                days[d][n].append((i, j))
             except KeyError:
-                path[n] = [(i, j)]
+                days[d] = {}
+                days[d][n] = [(i, j)]
 
-    out = {k: build_path(v) for k, v in path.items()}
+    out = {day : 
+        {k: build_path(v) for k, v in path.items()}
+        for day, path in days.items()
+        }
 
     return out

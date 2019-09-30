@@ -35,7 +35,9 @@ def main():
     args = parse_args()
     instance = load_instance(args.instance)
     result = run_solver(instance)
-    print(result)
+    for day, path in result.items():
+        print(f'Day {day}')
+        print(path)
     if args.clean:
         cleanup(CLEAN_FILES)
 

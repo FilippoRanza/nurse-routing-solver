@@ -48,21 +48,15 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-        for i in self.nodes[1:]:
+        for d in self.days:
             for n in self.nurses:
-                for d in self.days:
+                for i in self.nodes[1:]:
                     self.model.addConstr(
                         self.transit_vars.sum(d, n, i, "*") == self.service_vars.sum(i, n)
                     )
                     self.model.addConstr(
                         self.transit_vars.sum(d, n, "*", i) == self.service_vars.sum(i, n)
                     )
-
-
-        #for d in self.days:
-        #    for k in self.nurses:
-        #        for i in self.nodes:
-        #            self.model.addConstr(self.transit_vars.select(d, k, i, i) == 0)
 
 
         for d in self.days:

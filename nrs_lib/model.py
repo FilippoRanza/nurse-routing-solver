@@ -76,7 +76,7 @@ class ModelConfigurator:
                     == 1
                 )
 
-    def set_objective(self, hub_distances, patient_distances, external_price):
+    def set_objective(self, hub_distances, patient_distances, external, transit):
         distances = build_distance(hub_distances, patient_distances, 1000)
 
         arch_weight = {
@@ -88,8 +88,8 @@ class ModelConfigurator:
         }
 
         self.model.setObjective(
-            self.transit_vars.prod(arch_weight)
-            + (external_price * self.patient_vars.sum())
+            (transit * self.transit_vars.prod(arch_weight))
+            + (external * len(self.days) *self.patient_vars.sum())
         )
 
     def get_model(self):

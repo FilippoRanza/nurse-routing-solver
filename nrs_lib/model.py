@@ -48,43 +48,42 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-        for n in self.nurses:
-            for d in self.days:
-                for i in self.nodes[1:]:
-                    self.model.addConstr(
-                        self.transit_vars.sum(d, n, i, "*") == self.service_vars.sum(i, n)
-                    )
-                    self.model.addConstr(
-                        self.transit_vars.sum(d, n, "*", i) == self.service_vars.sum(i, n)
-                    )
+        self.model.addConstrs(
+            self.transit_vars.sum(d, n, i, "*") == self.service_vars.sum(i, n)
+            for d in self.days for n in self.nurses for i in self.nodes[1:]
+        )
 
+        self.model.addConstrs(
+            self.transit_vars.sum(d, n, '*', i) == self.service_vars.sum(i, n)
+            for d in self.days for n in self.nurses for i in self.nodes[1:]
+        )
 
-        for d in self.days:
-            for k in self.nurses:
-                self.model.addConstr(
-                    quicksum(
-                        self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, 0, i)
-                        for i in self.nodes[1:]
-                    )
-                    == 1
-                )
-                self.model.addConstr(
-                    quicksum(
-                        self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, i, 0)
-                        for i in self.nodes[1:]
-                    )
-                    == 1
-                )
+        #for d in self.days:
+        #    for k in self.nurses:
+        #        self.model.addConstr(
+        #            quicksum(
+        #                self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, 0, i)
+        #                for i in self.nodes[1:]
+        #            )
+        #            == 1
+        #        )
+        #        self.model.addConstr(
+        #            quicksum(
+        #                self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, i, 0)
+        #                for i in self.nodes[1:]
+        #            )
+        #            == 1
+        #        )
 
     def set_objective(self, hub_distances, patient_distances, external_price):
         distances = build_distance(hub_distances, patient_distances, 1000)
 
         arch_weight = {
-            (d, k, f, t): d
+            (day, k, f, t): d
             for f, dist in enumerate(distances)
             for t, d in enumerate(dist)
             for k in self.nurses
-            for d in self.days
+            for day in self.days
         }
 
         self.model.setObjective(

@@ -25,7 +25,7 @@ class ModelConfigurator:
         self.days = arange(days)
 
         transit_keys = (
-            (d, n, i, j) for n in self.nurses for i in self.nodes for j in self.nodes for d in self.days
+            (d, n, i, j)  for d in self.days for n in self.nurses for i in self.nodes for j in self.nodes
         )
         self.transit_vars = self.model.addVars(
             transit_keys, name="transit", vtype=GRB.BINARY
@@ -48,9 +48,9 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-        for n in self.nurses:
+        for d in self.days:
             for i in self.nodes[1:]:
-                for d in self.days:
+                for n in self.nurses:
                     self.model.addConstr(
                         self.transit_vars.sum(d, n, i, "*") == self.service_vars.sum(i, n)
                     ) 
@@ -59,8 +59,8 @@ class ModelConfigurator:
                         self.transit_vars.sum(d, n, '*', i) == self.service_vars.sum(i, n)
                     )                 
 
-        for d in self.days:
-            for k in self.nurses:
+        for k in self.nurses:
+            for d in self.days:
                 self.model.addConstr(
                     quicksum(
                         self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, 0, i)
@@ -112,7 +112,7 @@ def subtour_elimination(model, where):
                     for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
                     if vals[d, k, i, j] > 0.5
                 )
-                # find the shortest cycle in the selected edge list
+    
                 for tour in find_tours(selected):
                     model.cbLazy(
                         quicksum(model._transit[d, k, i, j] for i, j in tour)

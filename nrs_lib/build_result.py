@@ -24,15 +24,29 @@ def build_result(variables):
         val = v.getAttr("x")
         if val:
             d, n, i, j = k
-            try:
-                days[d][n].append((i, j))
-            except KeyError:
-                days[d] = {}
-                days[d][n] = [(i, j)]
 
+            try:
+                day = days[d]
+            except KeyError:
+                day = {}
+                days[d] = day
+
+            try:
+                day[n].append((i, j))
+            except KeyError:
+                day[n] = [(i, j)]
+    
     out = {day : 
         {k: build_path(v) for k, v in path.items()}
         for day, path in days.items()
         }
 
     return out
+
+
+def debug_output(variables):
+    for k, v in variables.items():
+        val = v.getAttr("x")
+        if val:
+            d, n, i, j = k
+            print(f'Day {d} - Nurse {n} -> ({i}, {j})')

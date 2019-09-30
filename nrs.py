@@ -15,6 +15,9 @@ def parse_args():
     parser.add_argument('-c', '--clean', action='store_true',
                         default=False, help='Remove gurobi.log after model optimization')
 
+    parser.add_argument('-d', '--debug', action='store_true',
+                        default=False, help='Enable debug mode')
+
     return parser.parse_args()
 
 
@@ -30,11 +33,10 @@ def cleanup(files):
         except:
             pass
 
-
 def main():
     args = parse_args()
     instance = load_instance(args.instance)
-    result = run_solver(instance)
+    result = run_solver(instance, args.debug)
     for day, path in result.items():
         print(f'Day {day}')
         print(path)

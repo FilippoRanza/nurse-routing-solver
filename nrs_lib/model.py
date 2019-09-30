@@ -15,7 +15,7 @@ def arange(size):
     return list(range(size))
 
 
-class ModelConfigutator:
+class ModelConfigurator:
     def __init__(self, name):
         self.model = Model(name)
 

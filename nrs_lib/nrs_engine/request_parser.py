@@ -10,7 +10,7 @@ def days_count(config):
 
 
 def _gen_variables_(day, request, patient, nurses, patients):
-    if not request:
+    if request:
         for n in nurses:
             for p in patients[patient - 1:]:
                 if p != patient:
@@ -24,7 +24,7 @@ def _request_iterator_(patient_requests):
             yield day, pat, req
 
 def _hub_iterator_(d, nurses, patient, request):
-    if not request:
+    if request:
         for n in nurses:
             yield d, n, 0, patient
             yield d, n, patient, 0

@@ -45,29 +45,29 @@ class ModelConfigurator:
             self.nodes[1:], name="patient", vtype=GRB.BINARY
         )
 
-        self._apply_contrains_(transit_vars)
+        self._apply_contrains_()
 
-    def _apply_contrains_(self, rev):
+    def _apply_contrains_(self):
         for i in self.nodes[1:]:
             self.model.addConstr(
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
 
-        for d, n, i, j in rev:
-            self.model.addConstr(self.transit_vars.sum(d, n, i, j) == 0)
-        #for d in self.days:
-        #    for i in self.nodes[1:]:
-        #        for n in self.nurses:
-        #            self.model.addConstr(
-        #                self.transit_vars.sum(d, n, i, "*")
-        #                == self.service_vars.sum(i, n)
-        #            )
-#
-        #            self.model.addConstr(
-        #                self.transit_vars.sum(d, n, "*", i)
-        #                == self.service_vars.sum(i, n)
-        #            )
+        #for d, n, i, j in rev:
+        #    self.model.addConstr(self.transit_vars.sum(d, n, i, j) == 0)
+        for d in self.days:
+            for i in self.nodes[1:]:
+                for n in self.nurses:
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, i, "*")
+                        == self.service_vars.sum(i, n)
+                    )
+
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, "*", i)
+                        == self.service_vars.sum(i, n)
+                    )
 
         for k in self.nurses:
             for d in self.days:

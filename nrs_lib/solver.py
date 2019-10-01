@@ -7,17 +7,26 @@ from .build_result import build_result, debug_output
 
 
 def days_count(config):
-    head = config['PATIENTS'][0]
-    req = head['REQUEST']
+    head = config["PATIENTS"][0]
+    req = head["REQUEST"]
     return len(req)
-    
+
 
 def run_solver(config, debug):
 
     model_config = ModelConfigurator("Name")
-    model_config.set_variables(config["NURSES"], len(config["PATIENTS"]), days_count(config))
+    model_config.set_variables(
+        config["NURSES"], len(config["PATIENTS"]), days_count(config)
+    )
     model_config.set_objective(
-        config["HUB_DISTANCE"], config["PATIENTS_DISTANCE"], 1000, 0.1
+        config["HUB_DISTANCE"], config["PATIENTS_DISTANCE"], 10000, 0.1
+    )
+
+    model_config.set_time_constraint(
+        config["NURSES_WORK_TIME"],
+        config["HUB_DISTANCE"],
+        config["PATIENTS_DISTANCE"],
+        0.2,
     )
 
     model, transit = model_config.get_model()

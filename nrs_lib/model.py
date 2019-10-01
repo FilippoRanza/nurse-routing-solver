@@ -18,6 +18,7 @@ def arange(size):
 class ModelConfigurator:
     def __init__(self, name):
         self.model = Model(name)
+        self.distances = None
 
     def set_variables(self, nurse_count, patient_count, days):
         self.nurses = arange(nurse_count)
@@ -76,19 +77,21 @@ class ModelConfigurator:
                     == 1
                 )
 
-    def set_objective(self, hub_distances, patient_distances, external, transit):
-        distances = build_distance(hub_distances, patient_distances, 1000)
+    def set_time_constraint(self, tmax, hub_distance, patient_distance, time_conv):
+        distances = self._distances_(hub_distance, patient_distance)
+        for d in self.days:
+            for n in self.nurses:
+                self.model.addConstr(
+                    (time_conv * (self.transit_vars.prod(distances, d, n, '*', '*'))) <= tmax
+                )
 
-        arch_weight = {
-            (day, k, f, t): d
-            for f, dist in enumerate(distances)
-            for t, d in enumerate(dist)
-            for k in self.nurses
-            for day in self.days
-        }
+
+    def set_objective(self, hub_distances, patient_distances, external, transit):
+    
+        distances = self._distances_(hub_distances, patient_distances)
 
         self.model.setObjective(
-            (transit * self.transit_vars.prod(arch_weight))
+            (transit * self.transit_vars.prod(distances))
             + (external * len(self.days) *self.patient_vars.sum())
         )
 
@@ -101,6 +104,19 @@ class ModelConfigurator:
 
         return self.model, self.transit_vars
 
+
+    def _distances_(self, hub, pat):
+        if self.distances is None:
+            distances = build_distance(hub, pat, 1000)
+            self.distances = {
+                (day, k, f, t): d
+                for f, dist in enumerate(distances)
+                for t, d in enumerate(dist)
+                for k in self.nurses
+                for day in self.days
+            }
+
+        return self.distances
 
 def subtour_elimination(model, where):
     if where == GRB.Callback.MIPSOL:

@@ -10,9 +10,10 @@ def _write_output_(result, fp):
         print(f"Day {day}", file=fp)
         print(path, file=fp)
 
+
 def output_result(result, file_name):
     if file_name:
-        with open(file_name, 'w') as out:
+        with open(file_name, "w") as out:
             _write_output_(result, out)
     else:
         _write_output_(result, stdout)

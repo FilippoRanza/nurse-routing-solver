@@ -4,6 +4,7 @@
 
 from nrs_lib import *
 
+
 def main():
     args = parse_args()
     instance = load_instance(args.instance)
@@ -13,6 +14,7 @@ def main():
         cleanup(CLEAN_FILES)
 
     output_result(result, args.output)
+
 
 if __name__ == "__main__":
     main()

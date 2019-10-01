@@ -4,6 +4,7 @@
 
 from argparse import ArgumentParser
 
+
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument("-i", "--instance", help="Request file")

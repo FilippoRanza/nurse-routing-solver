@@ -20,18 +20,18 @@ class ModelConfigurator:
         self.model = Model(name)
         self.distances = None
 
-    def set_variables(self, nurse_count, patient_count, days, transit_vars):
+    def set_variables(self, nurse_count, patient_count, days, rev_transit_vars):
         self.nurses = arange(nurse_count)
         self.nodes = arange(patient_count)
         self.days = arange(days)
 
-        #transit_vars = (
-        #    (d, n, i, j)
-        #    for d in self.days
-        #    for n in self.nurses
-        #    for i in self.nodes
-        #    for j in self.nodes
-        #)
+        transit_vars = (
+            (d, n, i, j)
+            for d in self.days
+            for n in self.nurses
+            for i in self.nodes
+            for j in self.nodes
+        )
         self.transit_vars = self.model.addVars(
             ((d, n, i, j) for d, n, i, j in transit_vars), name="transit", vtype=GRB.BINARY 
         )
@@ -45,26 +45,29 @@ class ModelConfigurator:
             self.nodes[1:], name="patient", vtype=GRB.BINARY
         )
 
-        self._apply_contrains_()
+        self._apply_contrains_(transit_vars)
 
-    def _apply_contrains_(self):
+    def _apply_contrains_(self, rev):
         for i in self.nodes[1:]:
             self.model.addConstr(
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-        for d in self.days:
-            for i in self.nodes[1:]:
-                for n in self.nurses:
-                    self.model.addConstr(
-                        self.transit_vars.sum(d, n, i, "*")
-                        == self.service_vars.sum(i, n)
-                    )
 
-                    self.model.addConstr(
-                        self.transit_vars.sum(d, n, "*", i)
-                        == self.service_vars.sum(i, n)
-                    )
+        for d, n, i, j in rev:
+            self.model.addConstr(self.transit_vars.sum(d, n, i, j) == 0)
+        #for d in self.days:
+        #    for i in self.nodes[1:]:
+        #        for n in self.nurses:
+        #            self.model.addConstr(
+        #                self.transit_vars.sum(d, n, i, "*")
+        #                == self.service_vars.sum(i, n)
+        #            )
+#
+        #            self.model.addConstr(
+        #                self.transit_vars.sum(d, n, "*", i)
+        #                == self.service_vars.sum(i, n)
+        #            )
 
         for k in self.nurses:
             for d in self.days:

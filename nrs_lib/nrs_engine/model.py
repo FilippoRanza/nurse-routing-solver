@@ -44,7 +44,7 @@ class ModelConfigurator:
         self.patient_vars = self.model.addVars(
             self.nodes[1:], name="patient", vtype=GRB.BINARY
         )
-
+        
         self._apply_contrains_()
 
     def _apply_contrains_(self):
@@ -108,7 +108,7 @@ class ModelConfigurator:
         setattr(self.model, "_days", self.days)
         self.model.Params.lazyConstraints = 1
 
-        return self.model, self.transit_vars
+        return self.model, self.transit_vars, self.patient_vars
 
     def _distances_(self, hub, pat):
         if self.distances is None:

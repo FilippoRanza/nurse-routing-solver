@@ -8,12 +8,12 @@ from nrs_lib import *
 def main():
     args = parse_args()
     instance = load_instance(args.instance)
-    result = run_solver(instance, args.debug)
+    nurses, external = run_solver(instance, args.debug)
 
     if args.clean:
         cleanup(CLEAN_FILES)
 
-    output_result(result, args.output)
+    output_result(nurses, external, args.output)
 
 
 if __name__ == "__main__":

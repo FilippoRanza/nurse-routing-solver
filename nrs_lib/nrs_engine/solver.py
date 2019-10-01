@@ -3,7 +3,8 @@
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
 from .model import ModelConfigurator, subtour_elimination
-from .build_result import build_result, debug_output
+from .build_result import build_nurse_result, debug_output, build_external_result
+
 
 
 def days_count(config):
@@ -29,11 +30,12 @@ def run_solver(config, debug):
         0.2,
     )
 
-    model, transit = model_config.get_model()
+    model, transit, patients = model_config.get_model()
 
     model.optimize(subtour_elimination)
 
     if debug:
         debug_output(transit)
 
-    return build_result(transit)
+    return build_nurse_result(transit), build_external_result(patients)
+

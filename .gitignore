@@ -8,3 +8,6 @@ gurobi.log
 .vscode/
 # adding untracked files on 2019-10-01 10:55
 nrs_io/__pycache__/
+# adding untracked files on 2019-10-01 11:13
+nrs_lib/nrs_engine/__pycache__/
+nrs_lib/nrs_io/__pycache__/

@@ -1,5 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python
 
-# Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
-
-from .solver import run_solver
+from .nrs_engine import *
+from .nrs_io import *

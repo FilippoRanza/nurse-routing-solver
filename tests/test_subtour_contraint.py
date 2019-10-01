@@ -3,7 +3,7 @@
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
 import unittest
-from nrs_lib.subtour_constraint import find_tours, find_subtour
+from nrs_lib.nrs_engine.subtour_constraint import find_tours, find_subtour
 
 
 class TestSubtourBuiler(unittest.TestCase):

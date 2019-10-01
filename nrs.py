@@ -4,8 +4,8 @@ from argparse import ArgumentParser
 import json
 from os import remove
 
-from nrs_lib import run_solver
-from nrs_io import output_result
+from nrs_lib import run_solver, output_result
+
 
 CLEAN_FILES = ["gurobi.log"]
 

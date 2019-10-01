@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 import unittest
-from nrs_lib.build_distance import build_distance
+from nrs_lib.nrs_engine.build_distance import build_distance
 
 
 class TestBuildDistance(unittest.TestCase):

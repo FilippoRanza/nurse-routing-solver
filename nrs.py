@@ -5,6 +5,7 @@ import json
 from os import remove
 
 from nrs_lib import run_solver
+from nrs_io import output_result
 
 CLEAN_FILES = ["gurobi.log"]
 
@@ -41,17 +42,15 @@ def cleanup(files):
         except:
             pass
 
-
 def main():
     args = parse_args()
     instance = load_instance(args.instance)
     result = run_solver(instance, args.debug)
-    for day, path in result.items():
-        print(f"Day {day}")
-        print(path)
+
     if args.clean:
         cleanup(CLEAN_FILES)
 
+    output_result(result, args.output)
 
 if __name__ == "__main__":
     main()

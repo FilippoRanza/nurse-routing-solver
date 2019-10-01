@@ -53,6 +53,6 @@ def build_external_result(external):
 
 
 def debug_output(variables):
-    for k, v in variables.items():  
+    for k, v in variables.items():
         d, n, i, j = k
         print(f"Day {d} - Nurse {n} -> ({i}, {j})")

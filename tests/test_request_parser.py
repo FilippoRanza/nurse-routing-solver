@@ -2,20 +2,20 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
-import unittest 
+import unittest
 from collections import Counter
 from nrs_lib.nrs_engine.request_parser import request_generator, _request_iterator_
 
 
 NURSE_COUNT = 3
 PATIENT_REQUEST = [
-    {'ID':(883, 527), 'REQUEST': [0, 3, 0]},
-    {'ID':(353, 550), 'REQUEST': [3, 0, 3]},
-    {'ID':(711, 641), 'REQUEST': [0, 2, 0]}
+    {"ID": (883, 527), "REQUEST": [0, 3, 0]},
+    {"ID": (353, 550), "REQUEST": [3, 0, 3]},
+    {"ID": (711, 641), "REQUEST": [0, 2, 0]},
 ]
 
+
 class TestRequestParser(unittest.TestCase):
-   
     def test_request_iterator(self):
         answer = list(_request_iterator_(PATIENT_REQUEST))
         self.assertEqual(len(answer), 9)
@@ -29,11 +29,10 @@ class TestRequestParser(unittest.TestCase):
             (2, 2, 3),
             (0, 3, 0),
             (1, 3, 2),
-            (2, 3, 0)
+            (2, 3, 0),
         ]
 
         self.assertEqual(correct_ans, answer)
-
 
     def test_request_generator(self):
         variables = list(request_generator(NURSE_COUNT, PATIENT_REQUEST))
@@ -58,7 +57,6 @@ class TestRequestParser(unittest.TestCase):
             self.assertIn((1, i, 3, 0), variables)
             self.assertIn((1, i, 3, 1), variables)
             self.assertIn((1, i, 1, 3), variables)
-        
 
         counter = Counter(variables)
         for k, v in counter.items():

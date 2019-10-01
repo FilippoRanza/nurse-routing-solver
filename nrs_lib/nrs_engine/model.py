@@ -33,7 +33,9 @@ class ModelConfigurator:
             for j in self.nodes
         )
         self.transit_vars = self.model.addVars(
-            ((d, n, i, j) for d, n, i, j in transit_vars), name="transit", vtype=GRB.BINARY 
+            ((d, n, i, j) for d, n, i, j in transit_vars),
+            name="transit",
+            vtype=GRB.BINARY,
         )
 
         service_key = ((i, n) for i in self.nodes[1:] for n in self.nurses)
@@ -53,8 +55,7 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-
-        #for d, n, i, j in rev:
+        # for d, n, i, j in rev:
         #    self.model.addConstr(self.transit_vars.sum(d, n, i, j) == 0)
         for d in self.days:
             for i in self.nodes[1:]:
@@ -110,7 +111,7 @@ class ModelConfigurator:
         setattr(self.model, "_patient_count", len(self.nodes))
         setattr(self.model, "_days", self.days)
         self.model.Params.lazyConstraints = 1
-        
+
         return self.model, self.transit_vars, self.patient_vars
 
     def _distances_(self, hub, pat):

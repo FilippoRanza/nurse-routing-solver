@@ -12,7 +12,10 @@ def run_solver(config, debug):
     model_config = ModelConfigurator("Name")
     transit = request_generator(config["NURSES"], config["PATIENTS"])
     model_config.set_variables(
-        config["NURSES"], len(config["PATIENTS"]), days_count(config["PATIENTS"]), transit
+        config["NURSES"],
+        len(config["PATIENTS"]),
+        days_count(config["PATIENTS"]),
+        transit,
     )
     model_config.set_objective(
         config["HUB_DISTANCE"], config["PATIENTS_DISTANCE"], 5000, 0.1

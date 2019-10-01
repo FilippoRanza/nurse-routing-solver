@@ -6,7 +6,6 @@ from .model import ModelConfigurator, subtour_elimination
 from .build_result import build_nurse_result, debug_output, build_external_result
 
 
-
 def days_count(config):
     head = config["PATIENTS"][0]
     req = head["REQUEST"]
@@ -38,4 +37,3 @@ def run_solver(config, debug):
         debug_output(transit)
 
     return build_nurse_result(transit), build_external_result(patients)
-

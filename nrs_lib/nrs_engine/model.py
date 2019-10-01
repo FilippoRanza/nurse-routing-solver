@@ -44,7 +44,7 @@ class ModelConfigurator:
         self.patient_vars = self.model.addVars(
             self.nodes[1:], name="patient", vtype=GRB.BINARY
         )
-        
+
         self._apply_contrains_()
 
     def _apply_contrains_(self):

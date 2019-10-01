@@ -42,13 +42,15 @@ def build_nurse_result(variables):
 
     return out
 
+
 def build_external_result(external):
     out = []
     for k, v in external.items():
-        value = v.getAttr('x')
+        value = v.getAttr("x")
         if value:
             out.append(k)
     return out
+
 
 def debug_output(variables):
     for k, v in variables.items():

@@ -8,15 +8,16 @@ from sys import stdout
 def _write_nurse_path_(result, fp):
     for day, plan in result.items():
         print(f"Day {day}", file=fp)
-        for nurse, path in plan.items(): 
-            print(f'Nurse {nurse}:', file=fp)
-            print(f'\t{path}', file=fp)
+        for nurse, path in plan.items():
+            print(f"Nurse {nurse}:", file=fp)
+            print(f"\t{path}", file=fp)
 
 
 def _write_external_serice_(ext, fp):
-    print('External Service:', file=fp)
+    print("External Service:", file=fp)
     for p in ext:
-        print(f'Patient {p}')
+        print(f"Patient {p}")
+
 
 def _output_wrapper_(nurse, external, fp):
     _write_nurse_path_(nurse, fp)

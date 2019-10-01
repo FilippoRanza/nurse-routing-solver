@@ -19,7 +19,6 @@ class TestBuildDistance(unittest.TestCase):
 
         dist_matrix = build_distance(hub_dist, patient_dist, 3)
         self.assertEqual(len(dist_matrix), len(patient_dist) + 1)
-        print(dist_matrix)
         for row in dist_matrix:
             self.assertEqual(len(row), len(patient_dist) + 1)
 

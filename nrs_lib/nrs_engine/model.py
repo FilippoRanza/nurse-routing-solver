@@ -20,20 +20,20 @@ class ModelConfigurator:
         self.model = Model(name)
         self.distances = None
 
-    def set_variables(self, nurse_count, patient_count, days):
+    def set_variables(self, nurse_count, patient_count, days, transit_vars):
         self.nurses = arange(nurse_count)
         self.nodes = arange(patient_count)
         self.days = arange(days)
 
-        transit_keys = (
-            (d, n, i, j)
-            for d in self.days
-            for n in self.nurses
-            for i in self.nodes
-            for j in self.nodes
-        )
+        #transit_vars = (
+        #    (d, n, i, j)
+        #    for d in self.days
+        #    for n in self.nurses
+        #    for i in self.nodes
+        #    for j in self.nodes
+        #)
         self.transit_vars = self.model.addVars(
-            transit_keys, name="transit", vtype=GRB.BINARY
+            ((d, n, i, j) for d, n, i, j in transit_vars), name="transit", vtype=GRB.BINARY 
         )
 
         service_key = ((i, n) for i in self.nodes[1:] for n in self.nurses)
@@ -98,7 +98,7 @@ class ModelConfigurator:
 
         self.model.setObjective(
             (transit * self.transit_vars.prod(distances))
-            + (external * len(self.days) * self.patient_vars.sum())
+            + (external * self.patient_vars.sum())
         )
 
     def get_model(self):
@@ -107,7 +107,7 @@ class ModelConfigurator:
         setattr(self.model, "_patient_count", len(self.nodes))
         setattr(self.model, "_days", self.days)
         self.model.Params.lazyConstraints = 1
-
+        
         return self.model, self.transit_vars, self.patient_vars
 
     def _distances_(self, hub, pat):

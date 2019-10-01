@@ -26,7 +26,11 @@ class ModelConfigurator:
         self.days = arange(days)
 
         transit_keys = (
-            (d, n, i, j)  for d in self.days for n in self.nurses for i in self.nodes for j in self.nodes
+            (d, n, i, j)
+            for d in self.days
+            for n in self.nurses
+            for i in self.nodes
+            for j in self.nodes
         )
         self.transit_vars = self.model.addVars(
             transit_keys, name="transit", vtype=GRB.BINARY
@@ -53,12 +57,14 @@ class ModelConfigurator:
             for i in self.nodes[1:]:
                 for n in self.nurses:
                     self.model.addConstr(
-                        self.transit_vars.sum(d, n, i, "*") == self.service_vars.sum(i, n)
-                    ) 
+                        self.transit_vars.sum(d, n, i, "*")
+                        == self.service_vars.sum(i, n)
+                    )
 
                     self.model.addConstr(
-                        self.transit_vars.sum(d, n, '*', i) == self.service_vars.sum(i, n)
-                    )                 
+                        self.transit_vars.sum(d, n, "*", i)
+                        == self.service_vars.sum(i, n)
+                    )
 
         for k in self.nurses:
             for d in self.days:
@@ -82,17 +88,17 @@ class ModelConfigurator:
         for d in self.days:
             for n in self.nurses:
                 self.model.addConstr(
-                    (time_conv * (self.transit_vars.prod(distances, d, n, '*', '*'))) <= tmax
+                    (time_conv * (self.transit_vars.prod(distances, d, n, "*", "*")))
+                    <= tmax
                 )
 
-
     def set_objective(self, hub_distances, patient_distances, external, transit):
-    
+
         distances = self._distances_(hub_distances, patient_distances)
 
         self.model.setObjective(
             (transit * self.transit_vars.prod(distances))
-            + (external * len(self.days) *self.patient_vars.sum())
+            + (external * len(self.days) * self.patient_vars.sum())
         )
 
     def get_model(self):
@@ -103,7 +109,6 @@ class ModelConfigurator:
         self.model.Params.lazyConstraints = 1
 
         return self.model, self.transit_vars
-
 
     def _distances_(self, hub, pat):
         if self.distances is None:
@@ -118,6 +123,7 @@ class ModelConfigurator:
 
         return self.distances
 
+
 def subtour_elimination(model, where):
     if where == GRB.Callback.MIPSOL:
         vals = model.cbGetSolution(model._transit)
@@ -128,7 +134,7 @@ def subtour_elimination(model, where):
                     for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
                     if vals[d, k, i, j] > 0.5
                 )
-    
+
                 for tour in find_tours(selected):
                     model.cbLazy(
                         quicksum(model._transit[d, k, i, j] for i, j in tour)

@@ -19,7 +19,7 @@ def build_path(path):
 
 def build_result(variables):
     days = {}
-    
+
     for k, v in variables.items():
         val = v.getAttr("x")
         if val:
@@ -35,11 +35,10 @@ def build_result(variables):
                 day[n].append((i, j))
             except KeyError:
                 day[n] = [(i, j)]
-    
-    out = {day : 
-        {k: build_path(v) for k, v in path.items()}
-        for day, path in days.items()
-        }
+
+    out = {
+        day: {k: build_path(v) for k, v in path.items()} for day, path in days.items()
+    }
 
     return out
 
@@ -49,4 +48,4 @@ def debug_output(variables):
         val = v.getAttr("x")
         if val:
             d, n, i, j = k
-            print(f'Day {d} - Nurse {n} -> ({i}, {j})')
+            print(f"Day {d} - Nurse {n} -> ({i}, {j})")

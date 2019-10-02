@@ -2,13 +2,15 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
+
 def clean_solution(transit, epsilon):
     for k, v in transit.items():
-        val = v.getAttr('x')
+        val = v.getAttr("x")
         if val > (1 - epsilon):
             yield k, True
         elif val < epsilon:
             yield k, False
+
 
 def build_path(path):
     f, t = path.pop(0)
@@ -28,7 +30,7 @@ def build_nurse_result(variables):
     days = {}
 
     for k, v in clean_solution(variables, 0.1):
-        
+
         if v:
             d, n, i, j = k
 
@@ -62,7 +64,6 @@ def build_external_result(external):
 def debug_output(model):
     variables = model.getVars()
     for v in variables:
-        val = v.getAttr('x')
+        val = v.getAttr("x")
         if val:
             print(v)
-     

@@ -8,9 +8,6 @@ from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
 
 
-
-
-
 def run_solver(config, debug):
 
     model_config = ModelConfigurator("Name")
@@ -39,9 +36,7 @@ def run_solver(config, debug):
 
     model, transit, patients = model_config.get_model()
 
-    a = model.optimize(subtour_elimination)
-    print(a)
-
+    model.optimize(subtour_elimination)
 
     if debug:
         debug_output(model)

@@ -20,9 +20,10 @@ class ModelConfigurator:
         self.model = Model(name)
         self.distances = None
 
-    def set_variables(self, nurse_count, patient_count, days, rev_transit_vars):
+    def set_variables(self, nurse_count, patient_count, days, request_constraints):
         self.nurses = arange(nurse_count)
-        self.nodes = arange(patient_count)
+        # one node for the ospital
+        self.nodes = arange(patient_count + 1)
         self.days = arange(days)
 
         transit_vars = (
@@ -47,9 +48,9 @@ class ModelConfigurator:
             self.nodes[1:], name="patient", vtype=GRB.BINARY
         )
 
-        self._apply_contrains_()
+        self._apply_contrains_(request_constraints)
 
-    def _apply_contrains_(self):
+    def _apply_contrains_(self, request_contraints):
         for i in self.nodes[1:]:
             self.model.addConstr(
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])

@@ -39,7 +39,8 @@ def run_solver(config, debug):
 
     model, transit, patients = model_config.get_model()
 
-    model.optimize(subtour_elimination)
+    a = model.optimize(subtour_elimination)
+    print(a)
 
 
     if debug:

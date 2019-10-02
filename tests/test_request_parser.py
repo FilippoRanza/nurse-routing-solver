@@ -34,11 +34,10 @@ class TestRequestParser(unittest.TestCase):
         self.assertEqual(correct_ans, answer)
 
     def test_request_generator(self):
-        constraints =constraint_generator(PATIENT_REQUEST)
+        constraints = constraint_generator(PATIENT_REQUEST)
 
         nodes = list(constraints.node_constaints)
         hub = list(constraints.hub_constaints)
-
 
         """
             9, the combinations of all requests
@@ -47,7 +46,7 @@ class TestRequestParser(unittest.TestCase):
         self.assertEqual(nodes, hub)
         self.assertEqual(len(nodes), 9)
 
-        #ensure uniqueness
+        # ensure uniqueness
         counter = Counter(nodes)
         for k, v in counter.items():
             self.assertEqual(v, 1, k)
@@ -60,6 +59,7 @@ class TestRequestParser(unittest.TestCase):
         for var in nodes:
             self.assertEqual(len(var), 3)
             self.assertIn(var[2], [0, 1])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -64,12 +64,13 @@ class ModelConfigurator:
         for n in self.nurses:
             for d, p, r in nodes:
                 self.model.addConstr(
-                    self.transit_vars.sum(d, n, p, "*") * self.service_vars.sum(p, n) == r
+                    self.transit_vars.sum(d, n, p, "*") * self.service_vars.sum(p, n)
+                    == r
                 )
                 self.model.addConstr(
-                    self.transit_vars.sum(d, n, "*", p) * self.service_vars.sum(p, n) == r
+                    self.transit_vars.sum(d, n, "*", p) * self.service_vars.sum(p, n)
+                    == r
                 )
-
 
     def set_time_constraint(self, tmax, hub_distance, patient_distance, time_conv):
         distances = self._distances_(hub_distance, patient_distance)

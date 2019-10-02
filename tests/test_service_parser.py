@@ -14,11 +14,11 @@ PATIENT_REQUEST = [
 ]
 
 
-SERVICES = [8, 1 ,5]
+SERVICES = [8, 1, 5]
 BASE_TIME = 15
 
-class TestServiceParser(unittest.TestCase):
 
+class TestServiceParser(unittest.TestCase):
     def test_service_time(self):
         services = _service_time(SERVICES, BASE_TIME)
         self.assertIsInstance(services, list)
@@ -30,6 +30,7 @@ class TestServiceParser(unittest.TestCase):
         self.assertIsInstance(services, dict)
         self.assertEqual(len(services), len(PATIENT_REQUEST))
         self.assertEqual(services, {1: 75, 2: 75, 3: 15})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -77,14 +77,6 @@ class ModelConfigurator:
                         self.transit_vars.sum(d, n, "*", p) == 0
                     )
 
-        #for n in self.nurses:
-        #    for d, patients in hub:
-        #        self.model.addConstr(
-        #            quicksum()      
-        #        )
-        #        self.model.addConstr(
-#
-        #        )
 
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)

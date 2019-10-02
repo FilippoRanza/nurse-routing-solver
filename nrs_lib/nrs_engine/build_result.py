@@ -2,6 +2,13 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
+def clean_solution(transit, epsilon):
+    for k, v in transit.items():
+        val = v.getAttr('x')
+        if val > (1 - epsilon):
+            yield k, True
+        elif val < epsilon:
+            yield k, False
 
 def build_path(path):
     f, t = path.pop(0)
@@ -20,9 +27,9 @@ def build_path(path):
 def build_nurse_result(variables):
     days = {}
 
-    for k, v in variables.items():
-        val = v.getAttr("x")
-        if val:
+    for k, v in clean_solution(variables, 0.1):
+        
+        if v:
             d, n, i, j = k
 
             try:

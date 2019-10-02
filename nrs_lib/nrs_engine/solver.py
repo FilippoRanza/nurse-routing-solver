@@ -8,11 +8,8 @@ from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
 
 
-def clean_solution(transit, epsilon):
-    for k, v in transit:
-        val = v.getAttr('x')
-        if val > (1 - epsilon):
-            v.setAttr('x')
+
+
 
 def run_solver(config, debug):
 
@@ -43,6 +40,7 @@ def run_solver(config, debug):
     model, transit, patients = model_config.get_model()
 
     model.optimize(subtour_elimination)
+
 
     if debug:
         debug_output(transit)

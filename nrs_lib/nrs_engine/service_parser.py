@@ -11,7 +11,6 @@ def _get_services(requests, services):
             yield 0
 
 
-
 def _service_time(services, base_time):
     tmp = map(lambda i: i * base_time, services)
     return list(tmp)

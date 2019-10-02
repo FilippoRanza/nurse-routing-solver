@@ -30,11 +30,7 @@ class TestServiceParser(unittest.TestCase):
         self.assertIsInstance(services, dict)
         self.assertEqual(len(services), len(PATIENT_REQUEST))
 
-        correct_ans = {
-            1: [0, 75, 0],
-            2: [75, 0, 75],
-            3: [0, 15, 0]
-        }
+        correct_ans = {1: [0, 75, 0], 2: [75, 0, 75], 3: [0, 15, 0]}
 
         self.assertEqual(services, correct_ans)
 

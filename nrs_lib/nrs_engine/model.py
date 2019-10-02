@@ -152,7 +152,7 @@ def subtour_elimination(model, where):
                 selected = tuplelist(
                     (i, j)
                     for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
-                    if vals[d, k, i, j] > 0.2
+                    if vals[d, k, i, j] > 0.5
                 )
 
                 for tour in find_tours(selected):

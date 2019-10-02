@@ -8,6 +8,12 @@ from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
 
 
+def clean_solution(transit, epsilon):
+    for k, v in transit:
+        val = v.getAttr('x')
+        if val > (1 - epsilon):
+            v.setAttr('x')
+
 def run_solver(config, debug):
 
     model_config = ModelConfigurator("Name")

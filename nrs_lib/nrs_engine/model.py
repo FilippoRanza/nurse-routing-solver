@@ -56,11 +56,35 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-        # for d, n, i, j in rev:
-        #    self.model.addConstr(self.transit_vars.sum(d, n, i, j) == 0)
-
         nodes = request_contraints.node_constaints
         hubs = request_contraints.hub_constaints
+
+        #for n in self.nurses:
+        #    for d, p, r in nodes:
+        #        if r:
+        #            self.model.addConstr(
+        #                self.transit_vars.sum(d, n, p, "*") == self.service_vars.sum(p, n)
+        #            )
+        #            self.model.addConstr(
+        #                self.transit_vars.sum(d, n, "*", p) == self.service_vars.sum(p, n)
+        #            )
+        #        else:
+        #            self.model.addConstr(
+        #                self.transit_vars.sum(d, n, p, '*') == 0
+        #            )
+        #            self.model.addConstr(
+        #                self.transit_vars.sum(d, n, "*", p) == 0
+        #            )
+#
+        #for n in self.nurses:
+        #    for d, patients in hub:
+        #        self.model.addConstr(
+        #            quicksum()      
+        #        )
+        #        self.model.addConstr(
+#
+        #        )
+
         for n in self.nurses:
             for d, p, r in nodes:
                 self.model.addConstr(
@@ -71,6 +95,7 @@ class ModelConfigurator:
                     self.transit_vars.sum(d, n, "*", p) * self.service_vars.sum(p, n)
                     == r
                 )
+
 
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)
@@ -127,7 +152,7 @@ def subtour_elimination(model, where):
                 selected = tuplelist(
                     (i, j)
                     for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
-                    if vals[d, k, i, j] > 0.5
+                    if vals[d, k, i, j] > 0.2
                 )
 
                 for tour in find_tours(selected):

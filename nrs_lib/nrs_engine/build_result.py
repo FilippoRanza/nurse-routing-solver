@@ -60,7 +60,7 @@ def debug_output(variables):
             d, n, i, j = k            
             if prev != d:
                 print('-'*10)
-            print(f"Day {d} - Nurse {n} -> ({i}, {j})")
+            print(f"Day {d} - Nurse {n} -> ({i}, {j}) {val}")
 
             prev = d
 

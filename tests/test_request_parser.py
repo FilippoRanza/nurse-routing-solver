@@ -4,10 +4,9 @@
 
 import unittest
 from collections import Counter
-from nrs_lib.nrs_engine.request_parser import request_generator, _request_iterator_
+from nrs_lib.nrs_engine.request_parser import constraint_generator, _request_iterator_
 
 
-NURSE_COUNT = 3
 PATIENT_REQUEST = [
     {"ID": (883, 527), "REQUEST": [0, 3, 0]},
     {"ID": (353, 550), "REQUEST": [3, 0, 3]},
@@ -35,43 +34,21 @@ class TestRequestParser(unittest.TestCase):
         self.assertEqual(correct_ans, answer)
 
     def test_request_generator(self):
-        variables = list(request_generator(NURSE_COUNT, PATIENT_REQUEST))
+        constraints =constraint_generator(PATIENT_REQUEST)
 
-        """
-            54 = 9 (requests) * 3(nurses) * 2(nodes)
-            54   = 3(days) * 3(nurses) * 3(patients) * 2(start and return)  
-            ---
-            108
-        """
-        self.assertEqual(len(variables), 108)
-
-        """
-            Patient 1 and 3 request for service on day
-            1
-        """
-        for i in range(NURSE_COUNT):
-            self.assertIn((1, i, 0, 1, True), variables)
-            self.assertIn((1, i, 1, 0, True), variables)
-            self.assertIn((1, i, 0, 3, True), variables)
-            self.assertIn((1, i, 3, 0, True), variables)
-            self.assertIn((1, i, 3, 1, True), variables)
-            self.assertIn((1, i, 1, 3, True), variables)
+        nodes = list(constraints.node_constaints)
+        hub = list(constraints.hub_constaints)
 
 
         """
-            Patients 1 and 3 does not request service 
-            on day 0
+            9, the combinations of all requests
         """
-        for i in range(NURSE_COUNT):
-            self.assertIn((0, i, 0, 1, False), variables)
-            self.assertIn((0, i, 1, 0, False), variables)
-            self.assertIn((0, i, 0, 3, False), variables)
-            self.assertIn((0, i, 3, 0, False), variables)
-            self.assertIn((0, i, 3, 1, False), variables)
-            self.assertIn((0, i, 1, 3, False), variables)
+        self.assertEqual(len(nodes), len(hub))
+        self.assertEqual(nodes, hub)
+        self.assertEqual(len(nodes), 9)
 
         #ensure uniqueness
-        counter = Counter(variables)
+        counter = Counter(nodes)
         for k, v in counter.items():
             self.assertEqual(v, 1, k)
 
@@ -80,8 +57,9 @@ class TestRequestParser(unittest.TestCase):
             (day, nurse, from, to, Pass)
             pass is a boolean
         """
-        for var in variables:
-            self.assertEqual(len(var), 5)
+        for var in nodes:
+            self.assertEqual(len(var), 3)
+            self.assertIn(var[2], [0, 1])
 
 if __name__ == "__main__":
     unittest.main()

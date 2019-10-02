@@ -4,13 +4,13 @@
 
 from .model import ModelConfigurator, subtour_elimination
 from .build_result import build_nurse_result, debug_output, build_external_result
-from .request_parser import days_count, request_generator
+from .request_parser import days_count, constraint_generator
 
 
 def run_solver(config, debug):
 
     model_config = ModelConfigurator("Name")
-    transit = request_generator(config["NURSES"], config["PATIENTS"])
+    transit = constraint_generator(config["NURSES"], config["PATIENTS"])
     model_config.set_variables(
         config["NURSES"],
         len(config["PATIENTS"]),

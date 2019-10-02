@@ -2,25 +2,23 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
+from collections import namedtuple
+from itertools import tee
 
 def days_count(config):
     head = config[0]
     req = head["REQUEST"]
     return len(req)
 
-
-def _gen_variables_(day, request, patient, nurses, patients):
-    req = request != 0
-    for n in nurses:
-        for p in patients[patient - 1 :]:
-            if p != patient:
-                yield day, n, patient, p, req
-                yield day, n, p, patient, req
-
 def _request_iterator_(patient_requests):
     for pat, requests in enumerate(patient_requests, 1):
         for day, req in enumerate(requests["REQUEST"]):
             yield day, pat, req
+
+def _node_constraints_(patient_requests):
+    for d, p, r in _request_iterator_(patient_requests):
+        out = 1 if r else 0
+        yield d, p, out
 
 
 def _hub_iterator_(d, nurses, patient, request):
@@ -30,9 +28,11 @@ def _hub_iterator_(d, nurses, patient, request):
         yield d, n, patient, 0, req
 
 
-def request_generator(nurse_count, patient_request):
-    nurses = list(range(nurse_count))
-    patients = list(range(1, len(patient_request) + 1))
-    for d, p, r in _request_iterator_(patient_request):
-        yield from _gen_variables_(d, r, p, nurses, patients)
-        yield from _hub_iterator_(d, nurses, p, r)
+def _init_request_(nodes, hub):
+    construct = namedtuple('Requests', ['node_constaints', 'hub_constaints'])
+    return construct(nodes, hub)
+
+def constraint_generator(patient_request):
+    tmp = _node_constraints_(patient_request)
+    node, hub = tee(tmp)
+    return _init_request_(node, hub)

@@ -58,35 +58,18 @@ class ModelConfigurator:
 
         # for d, n, i, j in rev:
         #    self.model.addConstr(self.transit_vars.sum(d, n, i, j) == 0)
-        for d in self.days:
-            for i in self.nodes[1:]:
-                for n in self.nurses:
-                    self.model.addConstr(
-                        self.transit_vars.sum(d, n, i, "*")
-                        == self.service_vars.sum(i, n)
-                    )
 
-                    self.model.addConstr(
-                        self.transit_vars.sum(d, n, "*", i)
-                        == self.service_vars.sum(i, n)
-                    )
-
-        for k in self.nurses:
-            for d in self.days:
+        nodes = request_contraints.node_constaints
+        hubs = request_contraints.hub_constaints
+        for n in self.nurses:
+            for d, p, r in nodes:
                 self.model.addConstr(
-                    quicksum(
-                        self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, 0, i)
-                        for i in self.nodes[1:]
-                    )
-                    == 1
+                    self.transit_vars.sum(d, n, p, "*") * self.service_vars.sum(p, n) == r
                 )
                 self.model.addConstr(
-                    quicksum(
-                        self.service_vars.sum(i, k) * self.transit_vars.sum(d, k, i, 0)
-                        for i in self.nodes[1:]
-                    )
-                    == 1
+                    self.transit_vars.sum(d, n, "*", p) * self.service_vars.sum(p, n) == r
                 )
+
 
     def set_time_constraint(self, tmax, hub_distance, patient_distance, time_conv):
         distances = self._distances_(hub_distance, patient_distance)

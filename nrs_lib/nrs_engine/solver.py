@@ -38,8 +38,6 @@ def run_solver(config, debug):
 
     model.optimize(subtour_elimination)
 
-    stat = model.status
-
     if debug:
         debug_output(model)
 

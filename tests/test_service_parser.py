@@ -29,7 +29,14 @@ class TestServiceParser(unittest.TestCase):
         services = service_parser(PATIENT_REQUEST, SERVICES, BASE_TIME)
         self.assertIsInstance(services, dict)
         self.assertEqual(len(services), len(PATIENT_REQUEST))
-        self.assertEqual(services, {1: 75, 2: 75, 3: 15})
+
+        correct_ans = {
+            1: [0, 75, 0],
+            2: [75, 0, 75],
+            3: [0, 15, 0]
+        }
+
+        self.assertEqual(services, correct_ans)
 
 
 if __name__ == "__main__":

@@ -72,12 +72,16 @@ class ModelConfigurator:
                     == r
                 )
 
-    def set_time_constraint(self, tmax, hub_distance, patient_distance, time_conv):
+    def set_time_constraint(self, tmax, hub_distance, patient_distance, time_conv, service_time):
         distances = self._distances_(hub_distance, patient_distance)
         for d in self.days:
             for n in self.nurses:
                 self.model.addConstr(
-                    (time_conv * (self.transit_vars.prod(distances, d, n, "*", "*")))
+                    (time_conv * (self.transit_vars.prod(distances, d, n, "*", "*"))) 
+                    + (quicksum(
+                        service_time[i][d] * self.service_vars.sum(i, n)
+                        for i in self.nodes[1:] 
+                    ))
                     <= tmax
                 )
 

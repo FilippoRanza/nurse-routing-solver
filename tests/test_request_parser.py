@@ -38,30 +38,50 @@ class TestRequestParser(unittest.TestCase):
         variables = list(request_generator(NURSE_COUNT, PATIENT_REQUEST))
 
         """
-            number of transit nodes
-            24 = 3(nurses) * 4(request) * 2(other patients)
-            start from hub and return to hub
-            24 = 4(requests) * 3 (nurses) * 2(start and return)
-            total = 48
+            54 = 9 (requests) * 3(nurses) * 2(nodes)
+            54   = 3(days) * 3(nurses) * 3(patients) * 2(start and return)  
+            ---
+            108
         """
-        self.assertEqual(len(variables), 48)
+        self.assertEqual(len(variables), 108)
 
-        self.assertEqual(variables[0], (1, 0, 1, 2))
-        self.assertEqual(variables[1], (1, 0, 2, 1))
-
-        # arches for nurse i, day 1
+        """
+            Patient 1 and 3 request for service on day
+            1
+        """
         for i in range(NURSE_COUNT):
-            self.assertIn((1, i, 0, 1), variables)
-            self.assertIn((1, i, 1, 0), variables)
-            self.assertIn((1, i, 0, 3), variables)
-            self.assertIn((1, i, 3, 0), variables)
-            self.assertIn((1, i, 3, 1), variables)
-            self.assertIn((1, i, 1, 3), variables)
+            self.assertIn((1, i, 0, 1, True), variables)
+            self.assertIn((1, i, 1, 0, True), variables)
+            self.assertIn((1, i, 0, 3, True), variables)
+            self.assertIn((1, i, 3, 0, True), variables)
+            self.assertIn((1, i, 3, 1, True), variables)
+            self.assertIn((1, i, 1, 3, True), variables)
 
+
+        """
+            Patients 1 and 3 does not request service 
+            on day 0
+        """
+        for i in range(NURSE_COUNT):
+            self.assertIn((0, i, 0, 1, False), variables)
+            self.assertIn((0, i, 1, 0, False), variables)
+            self.assertIn((0, i, 0, 3, False), variables)
+            self.assertIn((0, i, 3, 0, False), variables)
+            self.assertIn((0, i, 3, 1, False), variables)
+            self.assertIn((0, i, 1, 3, False), variables)
+
+        #ensure uniqueness
         counter = Counter(variables)
         for k, v in counter.items():
             self.assertEqual(v, 1, k)
 
+        """
+            each tuple contatins
+            (day, nurse, from, to, Pass)
+            pass is a boolean
+        """
+        for var in variables:
+            self.assertEqual(len(var), 5)
 
 if __name__ == "__main__":
     unittest.main()

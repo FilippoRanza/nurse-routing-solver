@@ -30,7 +30,7 @@ def run_solver(config, debug):
         config["NURSES_WORK_TIME"],
         config["HUB_DISTANCE"],
         config["PATIENTS_DISTANCE"],
-        0.1,
+        0.01,
         service_time,
     )
 

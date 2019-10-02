@@ -53,6 +53,14 @@ def build_external_result(external):
 
 
 def debug_output(variables):
+    prev = 0
     for k, v in variables.items():
-        d, n, i, j = k
-        print(f"Day {d} - Nurse {n} -> ({i}, {j})")
+        val = v.getAttr('x')
+        if val:
+            d, n, i, j = k            
+            if prev != d:
+                print('-'*10)
+            print(f"Day {d} - Nurse {n} -> ({i}, {j})")
+
+            prev = d
+

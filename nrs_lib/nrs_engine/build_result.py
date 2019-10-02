@@ -59,15 +59,10 @@ def build_external_result(external):
     return out
 
 
-def debug_output(variables):
-    prev = 0
-    for k, v in variables.items():
+def debug_output(model):
+    variables = model.getVars()
+    for v in variables:
         val = v.getAttr('x')
         if val:
-            d, n, i, j = k            
-            if prev != d:
-                print('-'*10)
-            print(f"Day {d} - Nurse {n} -> ({i}, {j}) {val}")
-
-            prev = d
-
+            print(v)
+     

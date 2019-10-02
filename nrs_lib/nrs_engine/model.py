@@ -59,23 +59,24 @@ class ModelConfigurator:
         nodes = request_contraints.node_constaints
         hubs = request_contraints.hub_constaints
 
-        #for n in self.nurses:
-        #    for d, p, r in nodes:
-        #        if r:
-        #            self.model.addConstr(
-        #                self.transit_vars.sum(d, n, p, "*") == self.service_vars.sum(p, n)
-        #            )
-        #            self.model.addConstr(
-        #                self.transit_vars.sum(d, n, "*", p) == self.service_vars.sum(p, n)
-        #            )
-        #        else:
-        #            self.model.addConstr(
-        #                self.transit_vars.sum(d, n, p, '*') == 0
-        #            )
-        #            self.model.addConstr(
-        #                self.transit_vars.sum(d, n, "*", p) == 0
-        #            )
-#
+
+        for d, p, r in nodes:
+            for n in self.nurses:        
+                if r:
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, p, "*")  == self.service_vars.sum(p, n)
+                    )
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, "*", p)  == self.service_vars.sum(p, n)
+                    )
+                else:
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, p, '*') == 0
+                    )
+                    self.model.addConstr(
+                        self.transit_vars.sum(d, n, "*", p) == 0
+                    )
+
         #for n in self.nurses:
         #    for d, patients in hub:
         #        self.model.addConstr(
@@ -84,18 +85,6 @@ class ModelConfigurator:
         #        self.model.addConstr(
 #
         #        )
-
-        for n in self.nurses:
-            for d, p, r in nodes:
-                self.model.addConstr(
-                    self.transit_vars.sum(d, n, p, "*") * self.service_vars.sum(p, n)
-                    == r
-                )
-                self.model.addConstr(
-                    self.transit_vars.sum(d, n, "*", p) * self.service_vars.sum(p, n)
-                    == r
-                )
-
 
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)

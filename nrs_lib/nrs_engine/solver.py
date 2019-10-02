@@ -43,6 +43,6 @@ def run_solver(config, debug):
 
 
     if debug:
-        debug_output(transit)
+        debug_output(model)
 
     return build_nurse_result(transit), build_external_result(patients)

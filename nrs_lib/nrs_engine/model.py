@@ -72,10 +72,8 @@ class ModelConfigurator:
                     == r
                 )
 
-    def set_time_constraint(
-        self, tmax, hub_distance, patient_distance, time_conv, service_time
-    ):
-        distances = self._distances_(hub_distance, patient_distance)
+    def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
+        distances = self._distances_(hub_dist, pat_dist)
         for d in self.days:
             for n in self.nurses:
                 self.model.addConstr(

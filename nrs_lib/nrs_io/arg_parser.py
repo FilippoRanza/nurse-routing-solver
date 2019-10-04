@@ -5,6 +5,15 @@
 from argparse import ArgumentParser
 
 
+def time_parser(time_str):
+    out = 0
+    for token in map(int, time_str.split(':')):
+        out *= 60
+        out += token
+
+    return out
+
+
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument("-i", "--instance", help="Request file")

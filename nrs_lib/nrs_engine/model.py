@@ -121,19 +121,21 @@ class ModelConfigurator:
         return self.distances
 
 
-def subtour_elimination(model, where):
-    if where == GRB.Callback.MIPSOL:
-        vals = model.cbGetSolution(model._transit)
-        for d in model._days:
-            for k in model._nurses:
-                selected = tuplelist(
-                    (i, j)
-                    for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
-                    if vals[d, k, i, j] >= 0.5
+def subtour_elimination(model):
+    vals = model.cbGetSolution(model._transit)
+    for d in model._days:
+        for k in model._nurses:
+            selected = tuplelist(
+                (i, j)
+                for _, _, i, j in model._transit.keys().select(d, k, "*", "*")
+                if vals[d, k, i, j] >= 0.5
+            )
+            for tour in find_tours(selected):
+                model.cbLazy(
+                    quicksum(model._transit[d, k, i, j] for i, j in tour)
+                    <= len(tour) - 1
                 )
 
-                for tour in find_tours(selected):
-                    model.cbLazy(
-                        quicksum(model._transit[d, k, i, j] for i, j in tour)
-                        <= len(tour) - 1
-                    )
+def gurobi_callback(model, where):
+    if where == GRB.Callback.MIPSOL:
+        subtour_elimination(model)

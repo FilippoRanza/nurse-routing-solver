@@ -2,7 +2,7 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
-from .model import ModelConfigurator, subtour_elimination
+from .model import ModelConfigurator, gurobi_callback
 from .build_result import build_nurse_result, debug_output, build_external_result
 from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
@@ -36,7 +36,7 @@ def run_solver(config, debug):
 
     model, transit, patients = model_config.get_model()
 
-    model.optimize(subtour_elimination)
+    model.optimize(gurobi_callback)
 
     if debug:
         debug_output(model)

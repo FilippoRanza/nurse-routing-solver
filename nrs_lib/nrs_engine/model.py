@@ -74,16 +74,6 @@ class ModelConfigurator:
                     self.model.addConstr(self.transit_vars.sum(d, n, p, "*") == 0)
                     self.model.addConstr(self.transit_vars.sum(d, n, "*", p) == 0)
 
-        # for d in self.days:
-        #    for n in self.nurses:
-        #        self.model.addConstr(
-        #            self.transit_vars.sum(d, n, '*', 0)
-        #            <= 1
-        #        )
-        #        self.model.addConstr(
-        #            self.transit_vars.sum(d, n, 0, '*')
-        #            <= 1
-        #        )
 
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)

@@ -7,11 +7,12 @@ from argparse import ArgumentParser
 
 def time_parser(time_str):
     out = 0
-    for token in map(int, time_str.split(':')):
+    for token in map(int, time_str.split(":")):
         out *= 60
         out += token
 
     return out
+
 
 def percentage_parser(percent_str):
     num = float(percent_str)
@@ -43,7 +44,8 @@ def parse_args():
         execution is stopped
         and the current best result is returned. If this option is 
         used with --tmax the gap stop is enabled only after tmax has
-        elapse. By default gap stop is not enabled""", type=percentage_parser
+        elapse. By default gap stop is not enabled""",
+        type=percentage_parser,
     )
 
     parser.add_argument(
@@ -52,7 +54,8 @@ def parse_args():
         does not find a solution in this time the execution is stopped
         and the current best result is returned. If this option is 
         used with --gap the gap stop is enabled only after tmax has
-        elapse. By default tmax is set to infinity""", type=time_parser
+        elapse. By default tmax is set to infinity""",
+        type=time_parser,
     )
 
     return parser.parse_args()

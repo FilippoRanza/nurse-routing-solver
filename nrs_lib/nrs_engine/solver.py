@@ -35,10 +35,8 @@ def run_solver(config, debug, max_time, min_gap):
     )
 
     model, transit, patients = model_config.get_model()
-    
-   
-    model.optimize(gurobi_callback(max_time, min_gap))
 
+    model.optimize(gurobi_callback(max_time, min_gap))
 
     if debug:
         debug_output(model)

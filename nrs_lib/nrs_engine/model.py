@@ -74,9 +74,8 @@ class ModelConfigurator:
                     self.model.addConstr(self.transit_vars.sum(d, n, p, "*") == 0)
                     self.model.addConstr(self.transit_vars.sum(d, n, "*", p) == 0)
 
-
-        #for d in self.days:
-        #    for n in self.nurses:        
+        # for d in self.days:
+        #    for n in self.nurses:
         #        self.model.addConstr(
         #            self.transit_vars.sum(d, n, '*', 0)
         #            <= 1
@@ -85,9 +84,6 @@ class ModelConfigurator:
         #            self.transit_vars.sum(d, n, 0, '*')
         #            <= 1
         #        )
-            
-
-
 
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)
@@ -152,13 +148,13 @@ def subtour_elimination(model):
                 )
 
 
-
 def callback_wrap(func):
     def __out__(model, where):
         if where == GRB.Callback.MIPSOL:
             subtour_elimination(model)
         elif where == GRB.Callback.MIP:
             func(model)
+
     return __out__
 
 
@@ -173,6 +169,7 @@ def mip_gap(bound, best, percent):
 
 def gurobi_callback(max_time, min_gap):
     if max_time and min_gap:
+
         @callback_wrap
         def tmp(model):
             if model.cbGet(GRB.Callback.RUNTIME) > max_time:
@@ -193,7 +190,7 @@ def gurobi_callback(max_time, min_gap):
         out = tmp
 
     elif min_gap:
-        
+
         @callback_wrap
         def tmp(model):
             best = model.cbGet(GRB.Callback.MIP_OBJBST)

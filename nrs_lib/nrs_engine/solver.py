@@ -8,29 +8,29 @@ from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
 
 
-def run_solver(config, debug, max_time, min_gap):
+def run_solver(instance, config, debug, max_time, min_gap):
 
     model_config = ModelConfigurator("Name")
-    transit = constraint_generator(config["PATIENTS"])
+    transit = constraint_generator(instance["PATIENTS"])
     model_config.set_variables(
-        config["NURSES"],
-        len(config["PATIENTS"]),
-        days_count(config["PATIENTS"]),
+        instance["NURSES"],
+        len(instance["PATIENTS"]),
+        days_count(instance["PATIENTS"]),
         transit,
     )
     model_config.set_objective(
-        config["HUB_DISTANCE"], config["PATIENTS_DISTANCE"], 5000, 0.1
+        instance["HUB_DISTANCE"], instance["PATIENTS_DISTANCE"], config.external_cost, config.transfer_cost
     )
 
     service_time = service_parser(
-        config["PATIENTS"], config["SERVICES"], config["BASE_TIME_SLOT"]
+        instance["PATIENTS"], instance["SERVICES"], instance["BASE_TIME_SLOT"]
     )
 
     model_config.set_time_constraint(
-        config["NURSES_WORK_TIME"],
-        config["HUB_DISTANCE"],
-        config["PATIENTS_DISTANCE"],
-        0.01,
+        instance["NURSES_WORK_TIME"],
+        instance["HUB_DISTANCE"],
+        instance["PATIENTS_DISTANCE"],
+        config.transfer_speed,
         service_time,
     )
 

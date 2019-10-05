@@ -8,7 +8,7 @@ from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
 
 
-def run_solver(config, debug):
+def run_solver(config, debug, max_time, min_gap):
 
     model_config = ModelConfigurator("Name")
     transit = constraint_generator(config["PATIENTS"])
@@ -35,8 +35,10 @@ def run_solver(config, debug):
     )
 
     model, transit, patients = model_config.get_model()
+    
+   
+    model.optimize(gurobi_callback(max_time, min_gap))
 
-    model.optimize(gurobi_callback)
 
     if debug:
         debug_output(model)

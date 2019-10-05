@@ -74,6 +74,21 @@ class ModelConfigurator:
                     self.model.addConstr(self.transit_vars.sum(d, n, p, "*") == 0)
                     self.model.addConstr(self.transit_vars.sum(d, n, "*", p) == 0)
 
+
+        #for d in self.days:
+        #    for n in self.nurses:        
+        #        self.model.addConstr(
+        #            self.transit_vars.sum(d, n, '*', 0)
+        #            <= 1
+        #        )
+        #        self.model.addConstr(
+        #            self.transit_vars.sum(d, n, 0, '*')
+        #            <= 1
+        #        )
+            
+
+
+
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)
         for d in self.days:
@@ -136,6 +151,59 @@ def subtour_elimination(model):
                     <= len(tour) - 1
                 )
 
-def gurobi_callback(model, where):
+
+
+def callback_wrap(func):
+    def __out__(model, where):
+        if where == GRB.Callback.MIPSOL:
+            subtour_elimination(model)
+        elif where == GRB.Callback.MIP:
+            func(model)
+    return __out__
+
+
+def basic_callback(model, where):
     if where == GRB.Callback.MIPSOL:
         subtour_elimination(model)
+
+
+def mip_gap(bound, best, percent):
+    return abs(best - bound) < percent * (1.0 + abs(best))
+
+
+def gurobi_callback(max_time, min_gap):
+    if max_time and min_gap:
+        @callback_wrap
+        def tmp(model):
+            if model.cbGet(GRB.Callback.RUNTIME) > max_time:
+                best = model.cbGet(GRB.Callback.MIP_OBJBST)
+                bound = model.cbGet(GRB.Callback.MIP_OBJBND)
+                if mip_gap(bound, best, min_gap):
+                    model.terminate()
+
+        out = tmp
+
+    elif max_time:
+
+        @callback_wrap
+        def tmp(model):
+            if model.cbGet(GRB.Callback.RUNTIME) > max_time:
+                model.terminate()
+
+        out = tmp
+
+    elif min_gap:
+        
+        @callback_wrap
+        def tmp(model):
+            best = model.cbGet(GRB.Callback.MIP_OBJBST)
+            bound = model.cbGet(GRB.Callback.MIP_OBJBND)
+            if mip_gap(bound, best, min_gap):
+                model.terminate()
+
+        out = tmp
+
+    else:
+        out = basic_callback
+
+    return out

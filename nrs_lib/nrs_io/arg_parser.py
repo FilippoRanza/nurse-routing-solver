@@ -13,6 +13,12 @@ def time_parser(time_str):
 
     return out
 
+def percentage_parser(percent_str):
+    num = float(percent_str)
+    if num >= 1:
+        num /= 100
+    return num
+
 
 def parse_args():
     parser = ArgumentParser()
@@ -37,7 +43,7 @@ def parse_args():
         execution is stopped
         and the current best result is returned. If this option is 
         used with --tmax the gap stop is enabled only after tmax has
-        elapse. By default gap stop is not enabled""",
+        elapse. By default gap stop is not enabled""", type=percentage_parser
     )
 
     parser.add_argument(
@@ -46,7 +52,7 @@ def parse_args():
         does not find a solution in this time the execution is stopped
         and the current best result is returned. If this option is 
         used with --gap the gap stop is enabled only after tmax has
-        elapse. By default tmax is set to infinity""",
+        elapse. By default tmax is set to infinity""", type=time_parser
     )
 
     return parser.parse_args()

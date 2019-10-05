@@ -15,8 +15,8 @@ def load_instance(file_name):
     return out
 
 
-def cleanup(files):
-    for f in files:
+def cleanup():
+    for f in CLEAN_FILES:
         try:
             remove(f)
         except:

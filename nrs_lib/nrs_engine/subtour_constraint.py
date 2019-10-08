@@ -33,12 +33,6 @@ def find_subtour(arches):
             except:
                 pass
 
-    for i in out:
-        try:
-            arches.remove(i)
-        except:
-            pass
-
     return out
 
 

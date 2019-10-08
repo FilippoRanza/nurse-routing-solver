@@ -16,7 +16,7 @@ def _write_nurse_path_(result, fp):
 def _write_external_serice_(ext, fp):
     print("External Service:", file=fp)
     for p in ext:
-        print(f"Patient {p}")
+        print(f"Patient {p}", file=fp)
 
 
 def _output_wrapper_(nurse, external, fp):

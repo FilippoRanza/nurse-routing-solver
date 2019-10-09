@@ -4,12 +4,19 @@
 
 from nrs_lib import *
 
+def compute_timeout(args, instance):
+    if args.tmax:
+        return args.tmax
+    elif args.auto:
+        return args.auto * instance_size(instance)
+    return 0
 
 def main():
     args = parse_args()
     instance = parse_instance(args.instance)
     config = get_conf(args.config)
-    nurses, external = run_solver(instance, config, args.debug, args.tmax, args.gap)
+    tmax = compute_timeout(args, instance)
+    nurses, external = run_solver(instance, config, args.debug, tmax, args.gap)
 
     if args.clean:
         cleanup()

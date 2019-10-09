@@ -7,11 +7,7 @@ from collections import Counter
 from nrs_lib.nrs_engine.request_parser import constraint_generator, _request_iterator_
 
 
-PATIENT_REQUEST = [
-    [0, 3, 0],
-    [3, 0, 3],
-    [0, 2, 0],
-]
+PATIENT_REQUEST = [[0, 3, 0], [3, 0, 3], [0, 2, 0]]
 
 
 class TestRequestParser(unittest.TestCase):

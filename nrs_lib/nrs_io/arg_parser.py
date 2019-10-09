@@ -32,10 +32,7 @@ def parse_args():
         help="Remove gurobi.log after model optimization",
     )
 
-    parser.add_argument(
-        '-c',
-        '--config', help="Specify the YAML config file"
-    )
+    parser.add_argument("-c", "--config", help="Specify the YAML config file")
 
     parser.add_argument(
         "-d", "--debug", action="store_true", default=False, help="Enable debug mode"
@@ -52,7 +49,6 @@ def parse_args():
         type=percentage_parser,
     )
 
-
     time_group = parser.add_mutually_exclusive_group()
 
     time_group.add_argument(
@@ -66,15 +62,14 @@ def parse_args():
     )
 
     time_group.add_argument(
-        '--auto',
+        "--auto",
         help=""" Automatically compute maximum execution time based
         on the size of the instance. This time, in seconds, is calculated
         multipling the numeber of nurses, patients and days the given number.
         If nurses are 4, patients are 5, day are 10 and auto is 5 timeout is 
         set to 1000 seconds.  If used with --gap this option works in the same way as --tmax
         """,
-        type=int
+        type=int,
     )
-
 
     return parser.parse_args()

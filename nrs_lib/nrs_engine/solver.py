@@ -13,13 +13,13 @@ def run_solver(instance, config, debug, max_time, min_gap):
     model_config = ModelConfigurator("Name")
     transit = constraint_generator(instance.patients)
     model_config.set_variables(
-        instance.nurses,
-        len(instance.patients),
-        days_count(instance.patients),
-        transit,
+        instance.nurses, len(instance.patients), days_count(instance.patients), transit
     )
     model_config.set_objective(
-        instance.hub_distances, instance.patient_distances , config.external_cost, config.transfer_cost
+        instance.hub_distances,
+        instance.patient_distances,
+        config.external_cost,
+        config.transfer_cost,
     )
 
     service_time = service_parser(

@@ -15,6 +15,7 @@ AVERAGE_SPEED: 45
 EXTERNAL_COST: 100
 """
 
+
 class TestConf(unittest.TestCase):
     def test_get_conf(self):
         conf = get_conf(None)
@@ -22,21 +23,20 @@ class TestConf(unittest.TestCase):
 
     def test_base_parse(self):
         with TemporaryDirectory() as path:
-            file = join(path, 'conf.yml')
-            with open(file, 'w') as out:
+            file = join(path, "conf.yml")
+            with open(file, "w") as out:
                 print(EXAMPLE_CONFIG, file=out)
 
             conf = get_conf(file)
             self.assertEqual(len(conf), 3)
-            self.assertAlmostEqual((1.6 * 7.5) / (10**4), conf.transfer_cost)
+            self.assertAlmostEqual((1.6 * 7.5) / (10 ** 4), conf.transfer_cost)
             self.assertEqual(conf.external_cost, 100)
-            self.assertAlmostEqual(conf.transfer_speed, 1 / ((45 * (50/3)) / 10))
-
+            self.assertAlmostEqual(conf.transfer_speed, 1 / ((45 * (50 / 3)) / 10))
 
     def test_correct_result(self):
         with TemporaryDirectory() as path:
-            file = join(path, 'conf.yml')
-            with open(file, 'w') as out:
+            file = join(path, "conf.yml")
+            with open(file, "w") as out:
                 print(EXAMPLE_CONFIG, file=out)
 
             conf = get_conf(file)
@@ -46,7 +46,5 @@ class TestConf(unittest.TestCase):
             self.assertAlmostEqual(conf.transfer_speed * 4500, 60)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-

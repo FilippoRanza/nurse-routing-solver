@@ -4,12 +4,14 @@
 
 from nrs_lib import *
 
+
 def compute_timeout(args, instance):
     if args.tmax:
         return args.tmax
     elif args.auto:
         return args.auto * instance_size(instance)
     return 0
+
 
 def main():
     args = parse_args()

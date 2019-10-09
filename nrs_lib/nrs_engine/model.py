@@ -56,7 +56,6 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-    
         for d, p, r in request_contraints:
             for n in self.nurses:
                 if r:
@@ -71,7 +70,6 @@ class ModelConfigurator:
                 else:
                     self.model.addConstr(self.transit_vars.sum(d, n, p, "*") == 0)
                     self.model.addConstr(self.transit_vars.sum(d, n, "*", p) == 0)
-
 
     def set_time_constraint(self, tmax, hub_dist, pat_dist, time_conv, service_time):
         distances = self._distances_(hub_dist, pat_dist)

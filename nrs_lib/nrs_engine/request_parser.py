@@ -27,9 +27,6 @@ def _hub_iterator_(d, nurses, patient, request):
         yield d, n, patient, 0, req
 
 
-
-
-
 def constraint_generator(patient_request):
     tmp = _node_constraints_(patient_request)
     return tmp

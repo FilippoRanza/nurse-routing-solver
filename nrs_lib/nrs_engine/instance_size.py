@@ -8,4 +8,3 @@ def instance_size(instance):
     pats = len(instance.patients)
     nurs = instance.nurses
     return reqs * pats * nurs
-

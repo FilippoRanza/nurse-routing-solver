@@ -2,19 +2,15 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
-from collections import namedtuple
-from itertools import tee
-
 
 def days_count(config):
     head = config[0]
-    req = head["REQUEST"]
-    return len(req)
+    return len(head)
 
 
 def _request_iterator_(patient_requests):
     for pat, requests in enumerate(patient_requests, 1):
-        for day, req in enumerate(requests["REQUEST"]):
+        for day, req in enumerate(requests):
             yield day, pat, req
 
 
@@ -31,12 +27,9 @@ def _hub_iterator_(d, nurses, patient, request):
         yield d, n, patient, 0, req
 
 
-def _init_request_(nodes, hub):
-    construct = namedtuple("Requests", ["node_constaints", "hub_constaints"])
-    return construct(nodes, hub)
+
 
 
 def constraint_generator(patient_request):
     tmp = _node_constraints_(patient_request)
-    node, hub = tee(tmp)
-    return _init_request_(node, hub)
+    return tmp

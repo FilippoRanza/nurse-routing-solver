@@ -56,10 +56,8 @@ class ModelConfigurator:
                 self.service_vars.sum(i, "*") == (1 - self.patient_vars[i])
             )
 
-        nodes = request_contraints.node_constaints
-        hubs = request_contraints.hub_constaints
-
-        for d, p, r in nodes:
+    
+        for d, p, r in request_contraints:
             for n in self.nurses:
                 if r:
                     self.model.addConstr(

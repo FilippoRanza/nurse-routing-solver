@@ -8,9 +8,9 @@ from nrs_lib.nrs_engine.service_parser import service_parser, _service_time
 
 
 PATIENT_REQUEST = [
-    {"ID": (883, 527), "REQUEST": [0, 3, 0]},
-    {"ID": (353, 550), "REQUEST": [3, 0, 3]},
-    {"ID": (711, 641), "REQUEST": [0, 2, 0]},
+    [0, 3, 0],
+    [3, 0, 3],
+    [0, 2, 0],
 ]
 
 

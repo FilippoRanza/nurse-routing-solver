@@ -7,7 +7,7 @@ from nrs_lib import *
 
 def main():
     args = parse_args()
-    instance = load_instance(args.instance)
+    instance = parse_instance(args.instance)
     config = get_conf(args.config)
     nurses, external = run_solver(instance, config, args.debug, args.tmax, args.gap)
 

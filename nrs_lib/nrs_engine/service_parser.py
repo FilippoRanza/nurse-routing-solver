@@ -20,8 +20,7 @@ def service_parser(patient_request, services, base_time):
     services = _service_time(services, base_time)
     out = {}
     for pat, pat_req in enumerate(patient_request, 1):
-        req = pat_req["REQUEST"]
-        ser = list(_get_services(req, services))
+        ser = list(_get_services(pat_req, services))
         out[pat] = ser
 
     return out

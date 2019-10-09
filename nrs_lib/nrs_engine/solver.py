@@ -11,25 +11,25 @@ from .service_parser import service_parser
 def run_solver(instance, config, debug, max_time, min_gap):
 
     model_config = ModelConfigurator("Name")
-    transit = constraint_generator(instance["PATIENTS"])
+    transit = constraint_generator(instance.patients)
     model_config.set_variables(
-        instance["NURSES"],
-        len(instance["PATIENTS"]),
-        days_count(instance["PATIENTS"]),
+        instance.nurses,
+        len(instance.patients),
+        days_count(instance.patients),
         transit,
     )
     model_config.set_objective(
-        instance["HUB_DISTANCE"], instance["PATIENTS_DISTANCE"], config.external_cost, config.transfer_cost
+        instance.hub_distances, instance.patient_distances , config.external_cost, config.transfer_cost
     )
 
     service_time = service_parser(
-        instance["PATIENTS"], instance["SERVICES"], instance["BASE_TIME_SLOT"]
+        instance.patients, instance.services, instance.base_time
     )
 
     model_config.set_time_constraint(
-        instance["NURSES_WORK_TIME"],
-        instance["HUB_DISTANCE"],
-        instance["PATIENTS_DISTANCE"],
+        instance.nurse_work,
+        instance.hub_distances,
+        instance.patient_distances,
         config.transfer_speed,
         service_time,
     )

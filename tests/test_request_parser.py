@@ -8,9 +8,9 @@ from nrs_lib.nrs_engine.request_parser import constraint_generator, _request_ite
 
 
 PATIENT_REQUEST = [
-    {"ID": (883, 527), "REQUEST": [0, 3, 0]},
-    {"ID": (353, 550), "REQUEST": [3, 0, 3]},
-    {"ID": (711, 641), "REQUEST": [0, 2, 0]},
+    [0, 3, 0],
+    [3, 0, 3],
+    [0, 2, 0],
 ]
 
 
@@ -35,15 +35,11 @@ class TestRequestParser(unittest.TestCase):
 
     def test_request_generator(self):
         constraints = constraint_generator(PATIENT_REQUEST)
-
-        nodes = list(constraints.node_constaints)
-        hub = list(constraints.hub_constaints)
-
+        nodes = list(constraints)
         """
             9, the combinations of all requests
         """
-        self.assertEqual(len(nodes), len(hub))
-        self.assertEqual(nodes, hub)
+
         self.assertEqual(len(nodes), 9)
 
         # ensure uniqueness

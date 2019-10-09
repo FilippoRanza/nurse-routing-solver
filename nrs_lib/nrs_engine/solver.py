@@ -2,6 +2,8 @@
 
 # Copyright (c) 2019 Filippo Ranza <filipporanza@gmail.com>
 
+from collections import namedtuple
+
 from .model import ModelConfigurator, gurobi_callback
 from .build_result import build_nurse_result, debug_output, build_external_result
 from .request_parser import days_count, constraint_generator
@@ -10,7 +12,7 @@ from .service_parser import service_parser
 
 def run_solver(instance, config, debug, max_time, min_gap):
 
-    model_config = ModelConfigurator("Name")
+    model_config = ModelConfigurator('name')
     transit = constraint_generator(instance.patients)
     model_config.set_variables(
         instance.nurses, len(instance.patients), days_count(instance.patients), transit
@@ -41,4 +43,6 @@ def run_solver(instance, config, debug, max_time, min_gap):
     if debug:
         debug_output(model)
 
-    return build_nurse_result(transit), build_external_result(patients)
+    output = namedtuple('Optimization', ['nurse', 'external', 'value', 'status'])
+
+    return output(build_nurse_result(transit), build_external_result(patients), model.objVal, model.status)

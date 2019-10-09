@@ -72,4 +72,7 @@ def parse_args():
         type=int,
     )
 
+    parser.add_argument('-n', '--name', help='Specify model name, --verbose is use this name is shown in the output', default='model')
+    parser.add_argument('-v', '--verbose', help='enable verbose output description', action='store_true', default=False)
+
     return parser.parse_args()

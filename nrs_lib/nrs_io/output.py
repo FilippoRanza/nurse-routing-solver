@@ -23,10 +23,19 @@ def _output_wrapper_(nurse, external, fp):
     _write_nurse_path_(nurse, fp)
     _write_external_serice_(external, fp)
 
+def _verbose_out_(value, status, name, fp):
+    print(f'Model {name}')
+    print(f'Objective Value {value}', file=fp)
+    print(f'Optimization Status {status}', file=fp)
 
-def output_result(nurse, external, file_name):
+
+def output_result(answer, file_name, verbose, name):
     if file_name:
         with open(file_name, "w") as out:
-            _output_wrapper_(nurse, external, out)
+            if verbose:
+                _verbose_out_(answer.value, answer.status, name, out)
+            _output_wrapper_(answer.nurse, answer.external, out)
     else:
-        _output_wrapper_(nurse, external, stdout)
+        if verbose:
+            _verbose_out_(answer.value, answer.status, name, stdout)
+        _output_wrapper_(answer.nurse, answer.external, stdout)

@@ -18,12 +18,12 @@ def main():
     instance = parse_instance(args.instance)
     config = get_conf(args.config)
     tmax = compute_timeout(args, instance)
-    nurses, external = run_solver(instance, config, args.debug, tmax, args.gap)
+    answer = run_solver(instance, config, args.debug, tmax, args.gap)
 
     if args.clean:
         cleanup()
 
-    output_result(nurses, external, args.output)
+    output_result(answer, args.output, args.verbose, args.name)
 
 
 if __name__ == "__main__":

@@ -24,7 +24,7 @@ def _output_wrapper_(nurse, external, fp):
     _write_external_serice_(external, fp)
 
 def _verbose_out_(value, status, name, fp):
-    print(f'Model {name}')
+    print(f'Model {name}', file=fp)
     print(f'Objective Value {value}', file=fp)
     print(f'Optimal: {status}', file=fp)
 

@@ -118,6 +118,9 @@ class ModelConfigurator:
         return self.distances
 
 
+def is_optimal(model):
+    return model.status == GRB.Status.OPTIMAL
+
 def subtour_elimination(model):
     vals = model.cbGetSolution(model._transit)
     for d in model._days:

@@ -4,7 +4,7 @@
 
 from collections import namedtuple
 
-from .model import ModelConfigurator, gurobi_callback
+from .model import ModelConfigurator, gurobi_callback, is_optimal
 from .build_result import build_nurse_result, debug_output, build_external_result
 from .request_parser import days_count, constraint_generator
 from .service_parser import service_parser
@@ -45,4 +45,4 @@ def run_solver(instance, config, debug, max_time, min_gap):
 
     output = namedtuple('Optimization', ['nurse', 'external', 'value', 'status'])
 
-    return output(build_nurse_result(transit), build_external_result(patients), model.objVal, model.status)
+    return output(build_nurse_result(transit), build_external_result(patients), model.objVal, is_optimal(model))

@@ -26,7 +26,7 @@ def _output_wrapper_(nurse, external, fp):
 def _verbose_out_(value, status, name, fp):
     print(f'Model {name}')
     print(f'Objective Value {value}', file=fp)
-    print(f'Optimization Status {status}', file=fp)
+    print(f'Optimal: {status}', file=fp)
 
 
 def output_result(answer, file_name, verbose, name):
